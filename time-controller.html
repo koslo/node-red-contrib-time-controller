@@ -85,19 +85,90 @@
 </script>
 
 <script type="text/x-red" data-help-name="time-controller">
-    <pre>
-[{
-    "start": {
-        "time": "16:00",
-        "value": 0,
-        "offset": 0
-    },
-    "end": {
-        "time": "17:00",
-        "value": 100,
-        "offset": 30
-    },
-    "topic": "rgbw/cmnd/channel1"
-}]
-    </pre>
+    <h1 id="time-controller">Time Controller</h1>
+    <p>Time Controller is a node-red plugin for RGBW Controller (or other devices) where all channels are managed seperatly. It is designed to fade in or fade out each channel in a specified time range. It calculates the percentage of each channel depending on the start and end value and time.</p>
+    <h2 id="configuration">Configuration</h2>
+    <h3 id="data">Data</h3>
+    <p>At the moment Data is defined as an array of objects including the start time and value, the end time and value and the topic. See <code>exapmle.json</code> for a full set of a RGBWW controller.</p>
+    <p>Each object has the following format:   </p>
+    <pre><code> {
+        &quot;start&quot;: {
+            &quot;time&quot;: &quot;06:00&quot;,
+            &quot;value&quot;: 0
+        },
+        &quot;end&quot;: {
+            &quot;time&quot;: &quot;06:30&quot;,
+            &quot;value&quot;: 100
+        },
+        &quot;topic&quot;: &quot;rgbw/cmnd/channel1&quot;
+    }
+    </code></pre><table>
+    <thead>
+    <tr>
+    <th>data object</th>
+    <th>description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td><code>start.time</code></td>
+    <td>start time, begin fading, <code>&quot;hh:mm&quot;</code></td>
+    </tr>
+    <tr>
+    <td><code>start.value</code></td>
+    <td>start value, <code>integer</code></td>
+    </tr>
+    <tr>
+    <td><code>end.time</code></td>
+    <td>end time, stop fading, <code>&quot;hh:mm&quot;</code></td>
+    </tr>
+    <tr>
+    <td><code>end.value</code></td>
+    <td>end value, <code>integer</code></td>
+    </tr>
+    <tr>
+    <td><code>topic</code></td>
+    <td>topic, e.q. a MQTT topic/ command like a channel</td>
+    </tr>
+    </tbody>
+    </table>
+    <h3 id="interval">Interval</h3>
+    <p>The interval in seconds to refresh the topics. Default: <code>1</code>   </p>
+    <h3 id="latitude-and-longitude-unused-atm-">Latitude and Longitude (unused atm)</h3>
+    <p>The coordinates of the location to calculate the correct sun events.</p>
+    <h3 id="use-previous-state-of-event-on-reload">Use previous state of event on reload</h3>
+    <p>If this is checked, the Time Controller will emit the last state of events on reload. Default: <code>false</code>    </p>
+    <h2 id="inputs">Inputs</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>msg.payload</th>
+    <th>description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td><code>on</code></td>
+    <td>start the timecontroller interval</td>
+    </tr>
+    <tr>
+    <td><code>of</code></td>
+    <td>stop the timecontroller interval</td>
+    </tr>
+    <tr>
+    <td><code>&quot;hh:mm&quot;</code></td>
+    <td>emit events at given time once without interval</td>
+    </tr>
+    </tbody>
+    </table>
+    <h2 id="programmatic-control">Programmatic Control</h2>
+    <p>todo</p>
+    <h1 id="coming-soon">Coming soon</h1>
+    <ul>
+    <li>implement suncalc events with offset</li>
+    <li>fullcalendar to define the time events in the frontend</li>
+    <li>programmatic control</li>
+    <li>instant on/ off events</li>
+    </ul>
+    
 </script>
