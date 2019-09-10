@@ -16,7 +16,11 @@
     "test": "nyc --reporter=html node_modules/.bin/mocha -R spec ./tests/test.js"
   },
   "author": "@koslo",
-  "license": "MIT",
+  "license": "MIT",  
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koslo/node-red-contrib-time-controller.git"
+},
   "dependencies": {
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
