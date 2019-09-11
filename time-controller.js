@@ -241,14 +241,14 @@ module.exports = function (RED) {
             }
         });
 
-        start();
-
         node.on('close', function () {
             stop();
         });
 
         // to allow testing
         node.now = () => moment().seconds(0).millisecond(0);
+
+        start();
     }
 
     RED.nodes.registerType("time-controller", TimeControllerNode);
