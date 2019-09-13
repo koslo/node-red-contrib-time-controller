@@ -29,7 +29,7 @@ const {
 const data = require('../example.json');
 const _ = require('lodash');
 const mock = require('node-red-contrib-mock-node');
-const nodeRedModule = require('../time-controller.js');
+const nodeRedModule = require('../index.js');
 let activeNode;
 
 function newNode(configOverrides) {

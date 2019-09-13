@@ -37,7 +37,7 @@
   },
   "node-red": {
     "nodes": {
-      "time-controller": "time-controller.js"
+      "time-controller": "index.js"
     }
   }
 }
