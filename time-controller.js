@@ -33,7 +33,7 @@ module.exports = function (RED) {
         let status = {};
 
         function init() {
-            var data = JSON.parse(config.data);
+            let data = JSON.parse(config.data);
             data = _.sortBy(data, ['topic', 'start']);
 
             node.data = _.filter(data, event => {
@@ -110,7 +110,6 @@ module.exports = function (RED) {
 
         function sendPreviousEvents() {
             const now = node.now();
-            let status = {};
             let previousEvent = {};
 
             //todo find a solution if it is in the early morning and we have to find the last event
@@ -129,7 +128,7 @@ module.exports = function (RED) {
                 status[event.topic] = event.end.value;
             });
 
-            setStatus(status);
+            setStatus();
         }
 
         function parseTime(time) {
@@ -193,10 +192,10 @@ module.exports = function (RED) {
                     status[msg.topic] = msg.payload;
                 }
             });
-            setStatus(status);
+            setStatus();
         }
 
-        function setStatus(status) {
+        function setStatus() {
             node.status({
                 fill: "green",
                 shape: "dot",
