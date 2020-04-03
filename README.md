@@ -6,7 +6,7 @@ Time Controller is a node-red plugin for RGBW Controller (or other devices) wher
 
 ### Data
 
-At the moment Data is defined as an array of objects including the start time and value, the end time and value and the topic. See `exapmle.json` for a full set of a RGBWW controller.
+At the moment Data is defined as an array of objects including the start time and value, the end time and value and the topic. See `example.json` for a full set of a RGBWW controller.
 
 Each object has the following format:   
 
