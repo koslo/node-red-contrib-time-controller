@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-module.exports = function (RED) {
-    const TimeController = require('./TimeController');
+module.exports = function(RED) {
+  const TimeController = require('./TimeController');
 
-    function TimeControllerNode(config) {
-        RED.nodes.createNode(this, config);
-        new TimeController(this, config);
-    }
+  function TimeControllerNode(config) {
+    RED.nodes.createNode(this, config);
+    (new TimeController(this, config)).start();
+  }
 
-    RED.nodes.registerType("time-controller", TimeControllerNode);
-}
+  RED.nodes.registerType('time-controller', TimeControllerNode);
+};

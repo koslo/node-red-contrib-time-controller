@@ -1,234 +1,296 @@
-const moment = require('moment');
-// const sunCalc = require('suncalc');
-const _ = require('lodash');
+const moment = require('moment')
+const sunCalc = require('suncalc')
+const _ = require('lodash')
 
 class TimeController {
     constructor(node, config) {
-        this.config = config;
-        this.node = node;
-        this.interval = null;
-        this.status = {};
+        /**
+         * instance of node
+         */
+        this.node = node
 
-        this.setEvents();
+        /**
+         * datetime of possible sun events
+         *
+         * solarNoon: "2020-04-01T11:17:29.057Z"
+         * nadir: "2020-03-31T23:17:29.057Z"
+         * sunrise: "2020-04-01T04:48:24.935Z"
+         * sunset: "2020-04-01T17:46:33.179Z"
+         * sunriseEnd: "2020-04-01T04:51:52.625Z"
+         * sunsetStart: "2020-04-01T17:43:05.489Z"
+         * dawn: "2020-04-01T04:14:27.174Z"
+         * dusk: "2020-04-01T18:20:30.940Z"
+         * nauticalDawn: "2020-04-01T03:33:31.078Z"
+         * nauticalDusk: "2020-04-01T19:01:27.036Z"
+         * nightEnd: "2020-04-01T02:49:39.065Z"
+         * night: "2020-04-01T19:45:19.048Z"
+         * goldenHourEnd: "2020-04-01T05:32:29.758Z"
+         * goldenHour: "2020-04-01T17:02:28.356Z"
+         */
+        this.sunCalcTimes = {
+            solarNoon    : null,
+            nadir        : null,
+            sunrise      : null,
+            sunset       : null,
+            sunriseEnd   : null,
+            sunsetStart  : null,
+            dawn         : null,
+            dusk         : null,
+            nauticalDawn : null,
+            nauticalDusk : null,
+            nightEnd     : null,
+            night        : null,
+            goldenHourEnd: null,
+            goldenHour   : null,
+        }
 
-        this.start();
+        /**
+         * time config
+         */
+        this.config = config
+
+        /**
+         * interval to check events
+         */
+        this.interval = null
+
+        /**
+         * node status
+         */
+        this.status = {}
+
+        this.setEvents()
     }
 
     init() {
-        let data = JSON.parse(this.config.data);
-        data = _.sortBy(data, ['topic', 'start']);
+        let data = JSON.parse(this.config.data)
+        data = _.sortBy(data, ['topic', 'start'])
 
         this.node.data = _.filter(data, event => {
             //for order
-            this.status[event.topic] = 0;
+            this.status[event.topic] = 0
 
-            return !this.hasConfigError(event);
-        });
+            return !this.hasConfigError(event)
+        })
 
-        this.config.interval = this.config.interval || 1;
-        this.config.usePreviousEventOnReload = (this.config.usePreviousEventOnReload + '').toLowerCase() === 'true';
+        this.config.interval = this.config.interval || 1
+        this.config.usePreviousEventOnReload = (this.config.usePreviousEventOnReload + '').toLowerCase() === 'true'
 
         // for testing
-        if (this.config.overideNow) {
-            const now = this.createMoment(this.config.overideNow);
+        if (this.config.overrideNow) {
+            const now = this.createMoment(this.config.overrideNow)
             if (moment.isMoment(now)) {
-                this.node.now = () => now;
+                this.node.now = () => now
             }
         }
     }
+
     //todo better solution?
     hasConfigError(event) {
-        let error = false;
+        let error = false
         if (_.has(event, 'start')) {
-            error |= this.hasEventTimeError(event, 'start');
-            error |= this.hasEventValueError(event, 'start');
+            error |= this.hasEventTimeError(event, 'start')
+            error |= this.hasEventValueError(event, 'start')
         } else {
-            this.node.error("start is undefined");
-            error = true;
+            this.node.error('start is undefined')
+            error = true
         }
         if (_.has(event, 'end')) {
-            error |= this.hasEventTimeError(event, 'end');
-            error |= this.hasEventValueError(event, 'end');
+            error |= this.hasEventTimeError(event, 'end')
+            error |= this.hasEventValueError(event, 'end')
         } else {
-            this.node.error("end is undefined");
-            error = true;
+            this.node.error('end is undefined')
+            error = true
         }
         if (!_.has(event, 'topic')) {
-            this.node.error("topic is undefined");
-            error = true;
+            this.node.error('topic is undefined')
+            error = true
         }
 
-        return error;
+        return error
     }
 
     hasEventTimeError(event, key) {
         if (_.has(event[key], 'time')) {
-            const matches = new RegExp('(\\d+):(\\d+)', 'u').exec(event[key].time);
-            if (!matches) {
-                this.node.error(key + " time should be a string of format hh:mm; given: " + event[key].time);
-                return true;
+            if (!(new RegExp('(\\d+):(\\d+)', 'u').exec(event[key].time)) && !_.has(this.sunCalcTimes, event[key].time)) {
+                this.node.error(key + ' time should be a string of format hh:mm or a sun event; given: ' + event[key].time)
+                return true
             }
         } else {
-            this.node.error(key + " time is undefined");
-            return true;
+            this.node.error(key + ' time is undefined')
+            return true
         }
-        return false;
+        return false
     }
 
     hasEventValueError(event, key) {
         if (_.has(event[key], 'value')) {
             if (!_.isNumber(event[key].value)) {
-                this.node.error(key + " value is not a number; given: " + event[key].value);
-                return true;
+                this.node.error(key + ' value is not a number; given: ' + event[key].value)
+                return true
             }
         } else {
-            this.node.error(key + " value is undefined");
-            return true;
+            this.node.error(key + ' value is undefined')
+            return true
         }
 
-        return false;
+        return false
     }
 
     sendPreviousEvents() {
-        const now = this.node.now();
-        let previousEvent = {};
+        const now = this.node.now()
+        let previousEvent = {}
 
         //todo find a solution if it is in the early morning and we have to find the last event
         this.node.data.forEach(event => {
-            event.end.moment = this.createMoment(event.end.time);
+            event.end.moment = this.createMoment(event.end.time)
             if (event.end.moment && event.end.moment.isSameOrBefore(now)) {
-                _.set(previousEvent, event.topic, event);
+                _.set(previousEvent, event.topic, event)
             }
-        });
+        })
 
         _.forEach(previousEvent, event => {
             this.node.send({
                 payload: event.end.value,
-                topic: event.topic
-            });
-            this.status[event.topic] = event.end.value;
-        });
+                topic  : event.topic,
+            })
+            this.status[event.topic] = event.end.value
+        })
 
-        this.setStatus();
+        this.setStatus()
     }
 
+    /**
+     *
+     * @param {string} time format 'hh:mm'
+     */
     parseTime(time) {
-        const matches = new RegExp('(\\d+):(\\d+)', 'u').exec(time);
+        const matches = new RegExp('(\\d+):(\\d+)', 'u').exec(time)
         if (matches && matches.length) {
             return {
                 h: +matches[1],
-                m: +matches[2]
-            };
+                m: +matches[2],
+            }
         }
-        return false;
+        return false
     }
 
-    createMoment(time) {
-        time = this.parseTime(time);
-        if (time) {
-            return moment()
-                .hour(time.h)
-                .minute(time.m)
-                .seconds(0)
-                .millisecond(0);
+    /**
+     *
+     * @param {string} time format 'hh:mm' or sunlight times (@see sunCalcTimes)
+     * @param {integer} offset in minutes
+     */
+    createMoment(time, offset = 0) {
+        if (_.has(this.sunCalcTimes, time)) {
+            return moment(this.sunCalcTimes[time])
+        } else {
+            time = this.parseTime(time)
+            if (time) {
+                return moment().
+                    hour(time.h).
+                    minute(time.m + offset).
+                    seconds(0).
+                    millisecond(0)
+            }
         }
 
-        return null;
+        return null
     }
 
     calculateValue(now, event) {
-        const startTime = event.start.moment.valueOf();
-        const endTime = event.end.moment.valueOf();
-        now = now.valueOf();
+        const startTime = event.start.moment.valueOf()
+        const endTime = event.end.moment.valueOf()
+        now = now.valueOf()
 
-        const startValue = event.start.value;
-        const endValue = event.end.value;
+        const startValue = event.start.value
+        const endValue = event.end.value
 
         // return Math.round((((now - startTime) / (endTime - startTime)) * (endValue - startValue) + startValue) * 100) / 100;
-        return Math.round(((now - startTime) / (endTime - startTime)) * (endValue - startValue) + startValue);
+        return Math.round(((now - startTime) / (endTime - startTime)) * (endValue - startValue) + startValue)
     }
 
     schedule(msg) {
-        let now = this.node.now();
+        let now = this.node.now()
         if (msg && moment.isMoment(msg.payload)) {
-            now = msg.payload;
+            now = msg.payload
         }
-        now.seconds(0).millisecond(0);
+        now.seconds(0).millisecond(0)
 
         this.node.data.forEach(event => {
-            //todo suncalc
-            // const sunCalcTimes = sunCalc.getTimes(new Date(), config.lat, config.lon);
-            //todo offset
+            this.sunCalcTimes = sunCalc.getTimes(now, this.config.lat, this.config.lon)
 
-            event.start.moment = this.createMoment(event.start.time);
-            event.end.moment = this.createMoment(event.end.time);
+            event.start.moment = this.createMoment(event.start.time, _.get(event.start, 'offset', 0))
+            event.end.moment = this.createMoment(event.end.time, _.get(event.end, 'offset', 0))
             if (event.start.moment && event.end.moment && now.isBetween(event.start.moment, event.end.moment, null, '[]')) {
                 msg = {
                     payload: this.calculateValue(now, event),
-                    topic: event.topic
-                };
+                    topic  : event.topic,
+                }
 
-                this.node.send(msg);
+                this.node.send(msg)
 
-                this.status[msg.topic] = msg.payload;
+                this.status[msg.topic] = msg.payload
             }
-        });
-        this.setStatus();
+        })
+        this.setStatus()
     }
 
     setStatus() {
         this.node.status({
-            fill: "green",
-            shape: "dot",
-            text: "running [" + _.values(this.status).join(", ") + "]"
-        });
+            fill : 'green',
+            shape: 'dot',
+            text : 'running [' + _.values(this.status).join(', ') + ']',
+        })
     }
 
     run() {
-        this.interval = setInterval(() => this.schedule(), this.config.interval * 1000);
+        this.interval = setInterval(
+            () => this.schedule(),
+            this.config.interval * 1000,
+        )
     }
 
     start() {
-        this.stop();
-        this.init();
-        this.config.usePreviousEventOnReload && this.sendPreviousEvents();
-        this.run();
+        this.stop()
+        this.init()
+        this.config.usePreviousEventOnReload && this.sendPreviousEvents()
+        this.run()
     }
 
     stop() {
         this.node.status({
-            fill: "red",
-            shape: "ring",
-            text: "stopped"
-        });
-        clearInterval(this.interval);
-        delete this.interval;
+            fill : 'red',
+            shape: 'ring',
+            text : 'stopped',
+        })
+        clearInterval(this.interval)
+        delete this.interval
     }
 
     setEvents() {
         this.node.on('input', (msg) => {
             //todo config via payload?
             if (msg.payload === 'on') {
-                this.start();
+                this.start()
             } else if (msg.payload === 'off') {
-                this.stop();
+                this.stop()
             } else {
-                msg.payload = this.createMoment(msg.payload);
+                msg.payload = this.createMoment(msg.payload)
                 if (moment.isMoment(msg.payload)) {
-                    this.init();
-                    this.stop();
-                    this.schedule(msg);
+                    this.init()
+                    this.stop()
+                    this.schedule(msg)
                 }
             }
-        });
+        })
 
         this.node.on('close', () => {
-            this.stop();
-        });
+            this.stop()
+        })
 
         // to allow testing
-        this.node.now = () => moment().seconds(0).millisecond(0);
+        this.node.now = () => moment().seconds(0).millisecond(0)
     }
 }
 
-module.exports = TimeController;
+module.exports = TimeController
