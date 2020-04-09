@@ -1,57 +1,57 @@
 <script type="text/javascript">
-  RED.nodes.registerType('time-controller', {
-    category     : 'function',
-    color        : '#a6bbcf',
-    defaults     : {
-      data                    : {
-        value   : '{}',
-        validate: RED.validators.typedInput('dataType'),
-        required: true,
-      },
-      dataType                : {
-        value: 'json',
-      },
-      interval                : {
-        value   : 1,
-        required: true,
-      },
-      lat                     : {
-        value: '',
-      },
-      lon                     : {
-        value: '',
-      },
-      usePreviousEventOnReload: {
-        value: true,
-      },
-    },
-    inputs       : 1,
-    outputs      : 1,
-    icon         : 'file.png',
-    label        : function() {
-      return this.name || 'time-controller';
-    },
-    oneditprepare: function() {
-      var node = this;
-      if (
-          !$('#node-input-lat').val().trim() &&
-          !$('#node-input-lon').val().trim()
-      ) {
-        if ('geolocation' in navigator) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            $('#node-input-lat').val(Number(position.coords.latitude.toFixed(5)));
-            $('#node-input-lon').val(Number(position.coords.longitude.toFixed(5)));
-          });
-        }
-      }
+    RED.nodes.registerType('time-controller', {
+        category     : 'function',
+        color        : '#a6bbcf',
+        defaults     : {
+            data                    : {
+                value   : '{}',
+                validate: RED.validators.typedInput('dataType'),
+                required: true,
+            },
+            dataType                : {
+                value: 'json',
+            },
+            interval                : {
+                value   : 1,
+                required: true,
+            },
+            lat                     : {
+                value: '',
+            },
+            lng                     : {
+                value: '',
+            },
+            usePreviousEventOnReload: {
+                value: true,
+            },
+        },
+        inputs       : 1,
+        outputs      : 1,
+        icon         : 'file.png',
+        label        : function () {
+            return this.name || 'time-controller'
+        },
+        oneditprepare: function () {
+            var node = this
+            if (
+                !$('#node-input-lat').val().trim() &&
+                !$('#node-input-lng').val().trim()
+            ) {
+                if ('geolocation' in navigator) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        $('#node-input-lat').val(Number(position.coords.latitude.toFixed(5)))
+                        $('#node-input-lng').val(Number(position.coords.longitude.toFixed(5)))
+                    })
+                }
+            }
 
-      $('#node-input-data').typedInput({
-        default: 'json',
-        types  : ['json'],
-      });
+            $('#node-input-data').typedInput({
+                default: 'json',
+                types  : ['json'],
+            })
 
-    },
-  });
+        },
+    })
 </script>
 
 <script type="text/x-red" data-template-name="time-controller">
@@ -68,8 +68,8 @@
     	<input type="text" id="node-input-lat" placeholder="51.025">
     </div>
     <div class="form-row">
-    	<label for="node-input-lon"><i class="fa fa-globe"></i> Longitude</label>
-    	<input type="text" id="node-input-lon" placeholder="-1.4">
+    	<label for="node-input-lng"><i class="fa fa-globe"></i> Longitude</label>
+    	<input type="text" id="node-input-lng" placeholder="-1.4">
     </div>
     </div>
     <div class="form-row">
@@ -78,6 +78,7 @@
             Use previous state of event on reload
         </label>
     </div>
+
 </script>
 
 <script type="text/x-red" data-help-name="time-controller">
@@ -167,5 +168,6 @@
     <li>instant on/ off events</li>
     </ul>
     
+
 
 </script>

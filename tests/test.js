@@ -23,21 +23,31 @@
  * THE SOFTWARE.
  */
 
-const {
-    assert,
-} = require('chai')
+const { assert } = require('chai')
 const data = require('../example.json')
+const Calculation = require('../Calculation')
 const _ = require('lodash')
+const moment = require('moment')
 const sunCalc = require('suncalc')
 const mock = require('node-red-contrib-mock-node')
 const nodeRedModule = require('../index.js')
+const LAT = 51.51
+const LNG = 11.86
+
 let activeNode
 
+/**
+ *
+ * @param {object} configOverrides
+ * @returns {nodeRedModule}
+ */
 function newNode(configOverrides) {
     let config = {
         name    : 'test-node',
         interval: 1,
         data    : JSON.stringify(data),
+        lat     : LAT,
+        lng     : LNG,
     }
     if (configOverrides) {
         _.assign(config, configOverrides)
@@ -45,6 +55,12 @@ function newNode(configOverrides) {
     return mock(nodeRedModule, config)
 }
 
+/**
+ *
+ * @param {string} payload
+ * @param {object|null} overrides
+ * @returns {nodeRedModule}
+ */
 function createNodeAndEmit(payload, overrides = null) {
     let node = newNode(overrides)
     node.emit('input', {
@@ -56,6 +72,12 @@ function createNodeAndEmit(payload, overrides = null) {
     return node
 }
 
+/**
+ *
+ * @param root
+ * @param {string} payload
+ * @param {function} cb
+ */
 function hook(root, payload, cb) {
     const timeout = 1
     let node = createNodeAndEmit(payload)
@@ -67,6 +89,11 @@ function hook(root, payload, cb) {
     }, timeout * 1000)
 }
 
+/**
+ *
+ * @param {object} data
+ * @returns {string}
+ */
 function createData(data) {
     return JSON.stringify([
         _.merge({
@@ -239,6 +266,7 @@ describe('time-controller', () => {
                 v: 'solarrNoon',
                 e: key + ' time should be a string of format hh:mm or a sun event; given: solarrNoon',
             },
+            //todo offset
         ].forEach((item) => {
             it('should validate ' + key + ' time with: ' + item.v, () => {
                 const data = {}
@@ -449,6 +477,80 @@ describe('time-controller', () => {
         assert.isUndefined(activeNode.sent(1))
         assert.isUndefined(activeNode.sent(2))
         assert.isUndefined(activeNode.sent(3))
+    })
+
+    it('should be on at nauticalDawn + 30 min till sunriseEnd', () => {
+        const sunCalcTimes = sunCalc.getTimes(new Date, LAT, LNG)
+        const data = {
+            start: {
+                time  : 'nauticalDawn',
+                moment: moment(_.get(sunCalcTimes, 'nauticalDawn')).
+                    seconds(0).
+                    millisecond(0),
+                value : 0,
+            },
+            end  : {
+                time  : 'sunriseEnd',
+                moment: moment(_.get(sunCalcTimes, 'sunriseEnd')).
+                    seconds(0).
+                    millisecond(0),
+                value : 90,
+            },
+            topic: 'test-topic-nauticalDawn-30',
+        }
+
+        const time = moment(_.get(sunCalcTimes, 'nauticalDawn')).
+            add(30, 'm').
+            seconds(0).
+            millisecond(0)
+
+        const expectedValue = (new Calculation(time, data)).getValue()
+
+        const node = createNodeAndEmit(time.format('hh:mm'), {
+            data: createData(data),
+        })
+
+        assert.equal(node.status().text, 'running [' + expectedValue + ']')
+        assert.equal(node.sent(0).topic, 'test-topic-nauticalDawn-30')
+        assert.equal(node.sent(0).payload, expectedValue)
+    })
+
+    it('should be on at nauticalDawn with 30 min offset till sunriseEnd', () => {
+        const sunCalcTimes = sunCalc.getTimes(new Date, LAT, LNG)
+        const data = {
+            start: {
+                time  : 'nauticalDawn',
+                moment: moment(_.get(sunCalcTimes, 'nauticalDawn')).
+                    add(30, 'm'). //offset
+                    seconds(0).
+                    millisecond(0),
+                offset: 30,
+                value : 0,
+            },
+            end  : {
+                time  : 'sunriseEnd',
+                moment: moment(_.get(sunCalcTimes, 'sunriseEnd')).
+                    seconds(0).
+                    millisecond(0),
+                value : 100,
+            },
+            topic: 'test-topic-nauticalDawn-offset-30',
+        }
+
+        const time = moment(_.get(sunCalcTimes, 'nauticalDawn')).
+            add(60, 'm').
+            seconds(0).
+            millisecond(0)
+
+        const expectedValue = (new Calculation(time, data)).getValue()
+
+        const node = createNodeAndEmit(time.format('hh:mm'), {
+            data: createData(data),
+        })
+
+        assert.equal(node.status().text, 'running [' + expectedValue + ']')
+        assert.equal(node.sent(0).topic, 'test-topic-nauticalDawn-offset-30')
+        assert.equal(node.sent(0).payload, expectedValue)
     })
 
     //todo check interval

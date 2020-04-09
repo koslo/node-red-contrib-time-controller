@@ -1,6 +1,7 @@
 const moment = require('moment')
 const sunCalc = require('suncalc')
 const _ = require('lodash')
+const Calculation = require('./Calculation')
 
 class TimeController {
     constructor(node, config) {
@@ -10,6 +11,8 @@ class TimeController {
         this.node = node
 
         /**
+         * @see https://github.com/mourner/suncalc
+         *
          * datetime of possible sun events
          *
          * solarNoon: "2020-04-01T11:17:29.057Z"
@@ -86,6 +89,7 @@ class TimeController {
     }
 
     //todo better solution?
+    //todo lat, lng mandatory?
     hasConfigError(event) {
         let error = false
         if (_.has(event, 'start')) {
@@ -178,11 +182,15 @@ class TimeController {
     /**
      *
      * @param {string} time format 'hh:mm' or sunlight times (@see sunCalcTimes)
-     * @param {integer} offset in minutes
+     * @param {int} offset in minutes
+     * @return {moment}
      */
     createMoment(time, offset = 0) {
         if (_.has(this.sunCalcTimes, time)) {
-            return moment(this.sunCalcTimes[time])
+            return moment(this.sunCalcTimes[time]).
+                add(offset, 'm').
+                seconds(0).
+                millisecond(0)
         } else {
             time = this.parseTime(time)
             if (time) {
@@ -197,18 +205,6 @@ class TimeController {
         return null
     }
 
-    calculateValue(now, event) {
-        const startTime = event.start.moment.valueOf()
-        const endTime = event.end.moment.valueOf()
-        now = now.valueOf()
-
-        const startValue = event.start.value
-        const endValue = event.end.value
-
-        // return Math.round((((now - startTime) / (endTime - startTime)) * (endValue - startValue) + startValue) * 100) / 100;
-        return Math.round(((now - startTime) / (endTime - startTime)) * (endValue - startValue) + startValue)
-    }
-
     schedule(msg) {
         let now = this.node.now()
         if (msg && moment.isMoment(msg.payload)) {
@@ -216,14 +212,14 @@ class TimeController {
         }
         now.seconds(0).millisecond(0)
 
-        this.node.data.forEach(event => {
-            this.sunCalcTimes = sunCalc.getTimes(now, this.config.lat, this.config.lon)
+        this.sunCalcTimes = sunCalc.getTimes(now, this.config.lat, this.config.lng)
 
+        this.node.data.forEach(event => {
             event.start.moment = this.createMoment(event.start.time, _.get(event.start, 'offset', 0))
             event.end.moment = this.createMoment(event.end.time, _.get(event.end, 'offset', 0))
             if (event.start.moment && event.end.moment && now.isBetween(event.start.moment, event.end.moment, null, '[]')) {
                 msg = {
-                    payload: this.calculateValue(now, event),
+                    payload: (new Calculation(now, event)).getValue(),
                     topic  : event.topic,
                 }
 
