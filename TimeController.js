@@ -13,7 +13,7 @@ class TimeController {
         /**
          * @see https://github.com/mourner/suncalc
          *
-         * datetime of possible sun events
+         * possible sun events with datetime
          *
          * solarNoon: "2020-04-01T11:17:29.057Z"
          * nadir: "2020-03-31T23:17:29.057Z"
@@ -89,7 +89,8 @@ class TimeController {
     }
 
     //todo better solution?
-    //todo lat, lng mandatory?
+    //todo check offset?
+    //todo lat, lng mandatory for suncalc?
     hasConfigError(event) {
         let error = false
         if (_.has(event, 'start')) {

@@ -32,7 +32,7 @@ const sunCalc = require('suncalc')
 const mock = require('node-red-contrib-mock-node')
 const nodeRedModule = require('../index.js')
 const LAT = 51.51
-const LNG = 11.86
+const LNG = 1.86
 
 let activeNode
 

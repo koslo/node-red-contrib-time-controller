@@ -65,11 +65,11 @@
     </div>
     <div class="form-row">
     	<label for="node-input-lat"><i class="fa fa-globe"></i> Latitude</label>
-    	<input type="text" id="node-input-lat" placeholder="51.025">
+    	<input type="text" id="node-input-lat" placeholder="51.51">
     </div>
     <div class="form-row">
     	<label for="node-input-lng"><i class="fa fa-globe"></i> Longitude</label>
-    	<input type="text" id="node-input-lng" placeholder="-1.4">
+    	<input type="text" id="node-input-lng" placeholder="1.86">
     </div>
     </div>
     <div class="form-row">
@@ -79,95 +79,175 @@
         </label>
     </div>
 
+
 </script>
 
 <script type="text/x-red" data-help-name="time-controller">
-    <h1 id="time-controller">Time Controller</h1>
-    <p>Time Controller is a node-red plugin for RGBW Controller (or other devices) where all channels are managed separatly. It is designed to fade in or fade out each channel in a specified time range. It calculates the percentage of each channel depending on the start and end value and time.</p>
-    <h2 id="configuration">Configuration</h2>
-    <h3 id="data">Data</h3>
-    <p>At the moment Data is defined as an array of objects including the start time and value, the end time and value and the topic. See <code>exapmle.json</code> for a full set of a RGBWW controller.</p>
-    <p>Each object has the following format:   </p>
-    <pre><code> {
-        &quot;start&quot;: {
-            &quot;time&quot;: &quot;06:00&quot;,
-            &quot;value&quot;: 0
-        },
-        &quot;end&quot;: {
-            &quot;time&quot;: &quot;06:30&quot;,
-            &quot;value&quot;: 100
-        },
-        &quot;topic&quot;: &quot;rgbw/cmnd/channel1&quot;
-    }
-    </code></pre><table>
-    <thead>
-    <tr>
-    <th>data object</th>
-    <th>description</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td><code>start.time</code></td>
-    <td>start time, begin fading, <code>&quot;hh:mm&quot;</code></td>
-    </tr>
-    <tr>
-    <td><code>start.value</code></td>
-    <td>start value, <code>integer</code></td>
-    </tr>
-    <tr>
-    <td><code>end.time</code></td>
-    <td>end time, stop fading, <code>&quot;hh:mm&quot;</code></td>
-    </tr>
-    <tr>
-    <td><code>end.value</code></td>
-    <td>end value, <code>integer</code></td>
-    </tr>
-    <tr>
-    <td><code>topic</code></td>
-    <td>topic, e.q. a MQTT topic/ command like a channel</td>
-    </tr>
-    </tbody>
-    </table>
-    <h3 id="interval">Interval</h3>
-    <p>The interval in seconds to refresh the topics. Default: <code>1</code>   </p>
-    <h3 id="latitude-and-longitude-unused-atm-">Latitude and Longitude (unused atm)</h3>
-    <p>The coordinates of the location to calculate the correct sun events.</p>
-    <h3 id="use-previous-state-of-event-on-reload">Use previous state of event on reload</h3>
-    <p>If this is checked, the Time Controller will emit the last state of events on reload. Default: <code>false</code>    </p>
-    <h2 id="inputs">Inputs</h2>
-    <table>
-    <thead>
-    <tr>
-    <th>msg.payload</th>
-    <th>description</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td><code>&quot;on&quot;</code></td>
-    <td>start the timecontroller interval</td>
-    </tr>
-    <tr>
-    <td><code>&quot;off&quot;</code></td>
-    <td>stop the timecontroller interval</td>
-    </tr>
-    <tr>
-    <td><code>&quot;hh:mm&quot;</code></td>
-    <td>emit events at given time once without interval</td>
-    </tr>
-    </tbody>
-    </table>
-    <h2 id="programmatic-control">Programmatic Control</h2>
-    <p>todo</p>
-    <h1 id="coming-soon">Coming soon</h1>
-    <ul>
-    <li>implement suncalc events with offset</li>
-    <li>fullcalendar to define the time events in the frontend</li>
-    <li>programmatic control</li>
-    <li>instant on/ off events</li>
-    </ul>
-    
-
+<h1 id="time-controller">Time Controller</h1>
+<p>Time Controller is a node-red plugin for RGBW Controller (or other devices) where all channels are managed separatly. It is designed to fade in or fade out each channel in a specified time range. It calculates the percentage of each channel depending on the start and end value and time.</p>
+<h2 id="configuration">Configuration</h2>
+<h3 id="data">Data</h3>
+<p>At the moment Data is defined as an array of objects including the start time and value, the end time and value and the topic. See <code>example.json</code> for a full set of a RGBWW controller.</p>
+<p>Each object has the following format:   </p>
+<pre><code> {
+    <span class="hljs-attr">"start"</span>: {
+        <span class="hljs-attr">"time"</span>: <span class="hljs-string">"06:00"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>
+    },
+    <span class="hljs-attr">"end"</span>: {
+        <span class="hljs-attr">"time"</span>: <span class="hljs-string">"solarNoon"</span>,
+        <span class="hljs-attr">"offset"</span>: <span class="hljs-number">10</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">78</span>
+    },
+    <span class="hljs-attr">"topic"</span>: <span class="hljs-string">"rgbw/cmnd/channel1"</span>
+}
+</code></pre><table>
+<thead>
+<tr>
+<th>data object</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>start.time</code></td>
+<td>start time, begin fading, <code>&quot;hh:mm&quot; or &quot;suncalc event&quot;</code></td>
+</tr>
+<tr>
+<td><code>start.offset</code></td>
+<td>start offset in minutes, <code>integer</code></td>
+</tr>
+<tr>
+<td><code>start.value</code></td>
+<td>start value, <code>integer</code></td>
+</tr>
+<tr>
+<td><code>end.time</code></td>
+<td>end time, stop fading, <code>&quot;hh:mm&quot; or &quot;suncalc event&quot;</code></td>
+</tr>
+<tr>
+<td><code>end.offset</code></td>
+<td>end offset in minutes, <code>integer</code></td>
+</tr>
+<tr>
+<td><code>end.value</code></td>
+<td>end value, <code>integer</code></td>
+</tr>
+<tr>
+<td><code>topic</code></td>
+<td>topic, e.q. a MQTT topic/ command like a channel</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interval">Interval</h3>
+<p>The interval in seconds to refresh the topics. Default: <code>1</code>   </p>
+<h3 id="latitude-and-longitude-unused-atm-">Latitude and Longitude (unused atm)</h3>
+<p>The coordinates of the location to calculate the correct sun events.</p>
+<h3 id="use-previous-state-of-event-on-reload">Use previous state of event on reload</h3>
+<p>If this is checked, the Time Controller will emit the last state of events on reload. Default: <code>false</code>    </p>
+<h3 id="possible-suncalc-events-with-datetime">possible suncalc events</h3>
+<p><a href="https://github.com/mourner/suncalc">https://github.com/mourner/suncalc</a></p>
+<table>
+<thead>
+<tr>
+<th>sunclac event</th>
+<th>datetime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>solarNoon</code></td>
+<td>&quot;2020-04-01T11:17:29.057Z&quot;</td>
+</tr>
+<tr>
+<td><code>nadir</code></td>
+<td>&quot;2020-03-31T23:17:29.057Z&quot;</td>
+</tr>
+<tr>
+<td><code>sunrise</code></td>
+<td>&quot;2020-04-01T04:48:24.935Z&quot;</td>
+</tr>
+<tr>
+<td><code>sunset</code></td>
+<td>&quot;2020-04-01T17:46:33.179Z&quot;</td>
+</tr>
+<tr>
+<td><code>sunriseEnd</code></td>
+<td>&quot;2020-04-01T04:51:52.625Z&quot;</td>
+</tr>
+<tr>
+<td><code>sunsetStart</code></td>
+<td>&quot;2020-04-01T17:43:05.489Z&quot;</td>
+</tr>
+<tr>
+<td><code>dawn</code></td>
+<td>&quot;2020-04-01T04:14:27.174Z&quot;</td>
+</tr>
+<tr>
+<td><code>dusk</code></td>
+<td>&quot;2020-04-01T18:20:30.940Z&quot;</td>
+</tr>
+<tr>
+<td><code>nauticalDawn</code></td>
+<td>&quot;2020-04-01T03:33:31.078Z&quot;</td>
+</tr>
+<tr>
+<td><code>nauticalDusk</code></td>
+<td>&quot;2020-04-01T19:01:27.036Z&quot;</td>
+</tr>
+<tr>
+<td><code>nightEnd</code></td>
+<td>&quot;2020-04-01T02:49:39.065Z&quot;</td>
+</tr>
+<tr>
+<td><code>night</code></td>
+<td>&quot;2020-04-01T19:45:19.048Z&quot;</td>
+</tr>
+<tr>
+<td><code>goldenHourEnd</code></td>
+<td>&quot;2020-04-01T05:32:29.758Z&quot;</td>
+</tr>
+<tr>
+<td><code>goldenHour</code></td>
+<td>&quot;2020-04-01T17:02:28.356Z&quot;</td>
+</tr>
+</tbody>
+</table>
+<h2 id="inputs">Inputs</h2>
+<table>
+<thead>
+<tr>
+<th>msg.payload</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&quot;on&quot;</code></td>
+<td>start the timecontroller interval</td>
+</tr>
+<tr>
+<td><code>&quot;off&quot;</code></td>
+<td>stop the timecontroller interval</td>
+</tr>
+<tr>
+<td><code>&quot;hh:mm&quot;</code></td>
+<td>emit events at given time once without interval</td>
+</tr>
+<tr>
+<td><code>&quot;suncalc event&quot;</code></td>
+<td>emit events at given time once without interval</td>
+</tr>
+</tbody>
+</table>
+<h2 id="programmatic-control">Programmatic Control</h2>
+<p>todo</p>
+<h1 id="coming-soon">Coming soon</h1>
+<ul>
+<li><del>implement suncalc events with offset</del></li>
+<li>fullcalendar to define the time events in the frontend</li>
+<li>programmatic control</li>
+<li>instant on/ off events</li>
+</ul>
 
 </script>
