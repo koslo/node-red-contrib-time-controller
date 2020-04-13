@@ -49,22 +49,22 @@ If this is checked, the Time Controller will emit the last state of events on re
 
 https://github.com/mourner/suncalc
 
-| sunclac event   | datetime                   |
-| --------------- | -------------------------- |
-| `solarNoon`     | "2020-04-01T11:17:29.057Z" |
-| `nadir`         | "2020-03-31T23:17:29.057Z" |
-| `sunrise`       | "2020-04-01T04:48:24.935Z" |
-| `sunset`        | "2020-04-01T17:46:33.179Z" |
-| `sunriseEnd`    | "2020-04-01T04:51:52.625Z" |
-| `sunsetStart`   | "2020-04-01T17:43:05.489Z" |
-| `dawn`          | "2020-04-01T04:14:27.174Z" |
-| `dusk`          | "2020-04-01T18:20:30.940Z" |
-| `nauticalDawn`  | "2020-04-01T03:33:31.078Z" |
-| `nauticalDusk`  | "2020-04-01T19:01:27.036Z" |
-| `nightEnd`      | "2020-04-01T02:49:39.065Z" |
-| `night`         | "2020-04-01T19:45:19.048Z" |
-| `goldenHourEnd` | "2020-04-01T05:32:29.758Z" |
-| `goldenHour`    | "2020-04-01T17:02:28.356Z" |
+| sunclac event    | datetime                 |
+| ---------------- | ------------------------ |
+| `nadir`          | 2020-04-12T01:14:05.769Z |
+| `nightEnd`       | 2020-04-13T04:14:23.086Z |
+| `nauticalDawn`   | 2020-04-13T05:02:54.596Z |
+| `dawn`           | 2020-04-13T05:46:23.778Z |
+| `sunrise`        | 2020-04-13T06:21:37.913Z |
+| `sunriseEnd`     | 2020-04-13T06:25:11.302Z |
+| `goldenHourEnd`  | 2020-04-13T07:06:30.077Z |
+| `solarNoon`      | 2020-04-13T13:14:05.769Z |
+| `goldenHour`     | 2020-04-13T19:21:41.462Z |
+| `sunsetStart`    | 2020-04-13T20:03:00.236Z |
+| `sunset`         | 2020-04-13T20:06:33.626Z |
+| `dusk`           | 2020-04-13T20:41:47.761Z |
+| `nauticalDusk`   | 2020-04-13T21:25:16.942Z |
+| `night`          | 2020-04-13T22:13:48.453Z |
 
 ## Inputs
 

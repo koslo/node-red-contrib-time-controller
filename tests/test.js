@@ -23,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+
+//todo suncalc events in example.json
+
 const { assert } = require('chai')
 const data = require('../example.json')
 const Calculation = require('../Calculation')
