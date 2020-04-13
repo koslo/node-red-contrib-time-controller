@@ -27,7 +27,7 @@
 //todo suncalc events in example.json
 
 const { assert } = require('chai')
-const data = require('../example.json')
+const data = require('../examples/example.json')
 const Calculation = require('../Calculation')
 const _ = require('lodash')
 const moment = require('moment')
