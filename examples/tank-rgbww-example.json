@@ -49,12 +49,12 @@
   },
   {
     "start": {
-      "time": "sunrise",
+      "time": "goldenHourEnd",
+      "offset": -15,
       "value": 0
     },
     "end": {
       "time": "goldenHourEnd",
-      "offset": -15,
       "value": 30
     },
     "topic": "wz_aq_rgbw/cmnd/channel2"
@@ -62,7 +62,6 @@
   {
     "start": {
       "time": "goldenHourEnd",
-      "offset": -15,
       "value": 30
     },
     "end": {
@@ -79,6 +78,7 @@
     },
     "end": {
       "time": "nauticalDusk",
+      "offset": -15,
       "value": 30
     },
     "topic": "wz_aq_rgbw/cmnd/channel2"
@@ -86,18 +86,19 @@
   {
     "start": {
       "time": "nauticalDusk",
+      "offset": -15,
       "value": 30
     },
     "end": {
       "time": "nauticalDusk",
-      "offset": 30,
       "value": 0
     },
     "topic": "wz_aq_rgbw/cmnd/channel2"
   },
   {
     "start": {
-      "time": "nightEnd",
+      "time": "dawn",
+      "offset": -60,
       "value": 1
     },
     "end": {
@@ -148,19 +149,21 @@
       "value": 100
     },
     "end": {
-      "time": "night",
+      "time": "nauticalDusk",
+      "offset": 45,
       "value": 20
     },
     "topic": "wz_aq_rgbw/cmnd/channel3"
   },
   {
     "start": {
-      "time": "night",
+      "time": "nauticalDusk",
+      "offset": 45,
       "value": 20
     },
     "end": {
-      "time": "night",
-      "offset": 90,
+      "time": "nauticalDusk",
+      "offset": 120,
       "value": 1
     },
     "topic": "wz_aq_rgbw/cmnd/channel3"
@@ -225,14 +228,14 @@
     },
     "end": {
       "time": "dusk",
-      "value": 10
+      "value": 20
     },
     "topic": "wz_aq_rgbw/cmnd/channel4"
   },
   {
     "start": {
       "time": "dusk",
-      "value": 10
+      "value": 20
     },
     "end": {
       "time": "nauticalDusk",
@@ -300,14 +303,14 @@
     },
     "end": {
       "time": "dusk",
-      "value": 10
+      "value": 20
     },
     "topic": "wz_aq_rgbw/cmnd/channel5"
   },
   {
     "start": {
       "time": "dusk",
-      "value": 10
+      "value": 20
     },
     "end": {
       "time": "nauticalDusk",

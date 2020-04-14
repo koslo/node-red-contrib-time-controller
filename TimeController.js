@@ -91,6 +91,7 @@ class TimeController {
     //todo better solution?
     //todo check offset?
     //todo lat, lng mandatory for suncalc?
+    //todo check if suncalc event is valid date (e.q. in summer there is no night in some areas. - "Invalid Date" )
     hasConfigError(event) {
         let error = false
         if (_.has(event, 'start')) {

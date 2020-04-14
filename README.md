@@ -51,7 +51,7 @@ https://github.com/mourner/suncalc
 
 | sunclac event    | datetime                 |
 | ---------------- | ------------------------ |
-| `nadir`          | 2020-04-12T01:14:05.769Z |
+| `nadir`          | 2020-04-13T01:14:05.769Z |
 | `nightEnd`       | 2020-04-13T04:14:23.086Z |
 | `nauticalDawn`   | 2020-04-13T05:02:54.596Z |
 | `dawn`           | 2020-04-13T05:46:23.778Z |
