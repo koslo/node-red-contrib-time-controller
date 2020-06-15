@@ -37,7 +37,7 @@ Each object has the following format:
 
 The interval in seconds to refresh the topics. Default: `1`   
 
-### Latitude and Longitude (unused atm)
+### Latitude and Longitude
 
 The coordinates of the location to calculate the correct sun events.
 
