@@ -8,7 +8,7 @@
       "time": "06:30",
       "value": 100
     },
-    "topic": "wz_aq_rgbw/cmnd/channel1"
+    "topic": "wz_aq_rgbw.cmnd/channel1"
   },
   {
     "start": {
@@ -19,7 +19,7 @@
       "time": "07:00",
       "value": 0
     },
-    "topic": "wz_aq_rgbw/cmnd/channel1"
+    "topic": "wz_aq_rgbw.cmnd/channel1"
   },
   {
     "start": {
@@ -30,7 +30,7 @@
       "time": "21:00",
       "value": 100
     },
-    "topic": "wz_aq_rgbw/cmnd/channel1"
+    "topic": "wz_aq_rgbw.cmnd/channel1"
   },
   {
     "start": {
@@ -41,7 +41,7 @@
       "time": "21:30",
       "value": 0
     },
-    "topic": "wz_aq_rgbw/cmnd/channel1"
+    "topic": "wz_aq_rgbw.cmnd/channel1"
   },
   {
     "start": {

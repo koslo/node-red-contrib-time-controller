@@ -108,7 +108,7 @@ function createData(data) {
                 'time' : '00:00',
                 'value': 0,
             },
-            'topic': 'topic',
+            'topic': 'topic.topic',
         }, data),
     ])
 }
@@ -127,7 +127,7 @@ describe('time-controller', () => {
                         'time' : '00:00',
                         'value': 0,
                     },
-                    'topic': 'topic',
+                    'topic': 'topic.topic',
                 },
             ]),
         })
@@ -145,7 +145,7 @@ describe('time-controller', () => {
                         'time' : '00:00',
                         'value': 0,
                     },
-                    'topic': 'topic',
+                    'topic': 'topic.topic',
                 },
             ]),
         })
@@ -163,7 +163,7 @@ describe('time-controller', () => {
                         'time' : '00:00',
                         'value': 0,
                     },
-                    'topic': 'topic',
+                    'topic': 'topic.topic',
                 },
             ]),
         })
@@ -178,7 +178,7 @@ describe('time-controller', () => {
                         'time' : '00:00',
                         'value': 0,
                     },
-                    'topic': 'topic',
+                    'topic': 'topic.topic',
                 },
             ]),
         })
@@ -196,7 +196,7 @@ describe('time-controller', () => {
                         'time' : '00:00',
                         'value': 0,
                     },
-                    'topic': 'topic',
+                    'topic': 'topic.topic',
                 },
             ]),
         })
@@ -214,7 +214,7 @@ describe('time-controller', () => {
                         'time' : '00:00',
                         'value': 0,
                     },
-                    'topic': 'topic',
+                    'topic': 'topic.topic',
                 },
             ]),
         })
@@ -337,7 +337,7 @@ describe('time-controller', () => {
         const node = createNodeAndEmit('06:15')
 
         assert.equal(node.status().text, 'running [50, 50, 0, 0]')
-        assert.equal(node.sent(0).topic, 'wz_aq_rgbw/cmnd/channel1')
+        assert.equal(node.sent(0).topic, 'wz_aq_rgbw.cmnd/channel1')
         assert.equal(node.sent(0).payload, 50)
         assert.equal(node.sent(1).topic, 'wz_aq_rgbw/cmnd/channel3')
         assert.equal(node.sent(1).payload, 50)
@@ -347,7 +347,7 @@ describe('time-controller', () => {
         const node = createNodeAndEmit('06:45')
 
         assert.equal(node.status().text, 'running [50, 0, 15, 50]')
-        assert.equal(node.sent(0).topic, 'wz_aq_rgbw/cmnd/channel1')
+        assert.equal(node.sent(0).topic, 'wz_aq_rgbw.cmnd/channel1')
         assert.equal(node.sent(0).payload, 50)
         assert.equal(node.sent(1).topic, 'wz_aq_rgbw/cmnd/channel4')
         assert.equal(node.sent(1).payload, 15)
@@ -359,7 +359,7 @@ describe('time-controller', () => {
         const node = createNodeAndEmit('07:00')
 
         assert.equal(node.status().text, 'running [0, 0, 30, 100]')
-        assert.equal(node.sent(0).topic, 'wz_aq_rgbw/cmnd/channel1')
+        assert.equal(node.sent(0).topic, 'wz_aq_rgbw.cmnd/channel1')
         assert.equal(node.sent(0).payload, 0)
         assert.equal(node.sent(1).topic, 'wz_aq_rgbw/cmnd/channel4')
         assert.equal(node.sent(1).payload, 30)
@@ -388,7 +388,7 @@ describe('time-controller', () => {
         const node = createNodeAndEmit('20:30')
 
         assert.equal(node.status().text, 'running [0, 0, 10, 80]')
-        assert.equal(node.sent(0).topic, 'wz_aq_rgbw/cmnd/channel1')
+        assert.equal(node.sent(0).topic, 'wz_aq_rgbw.cmnd/channel1')
         assert.equal(node.sent(0).payload, 0)
         assert.equal(node.sent(1).topic, 'wz_aq_rgbw/cmnd/channel4')
         assert.equal(node.sent(1).payload, 10)
@@ -400,7 +400,7 @@ describe('time-controller', () => {
         const node = createNodeAndEmit('21:15')
 
         assert.equal(node.status().text, 'running [52, 50, 0, 0]')
-        assert.equal(node.sent(0).topic, 'wz_aq_rgbw/cmnd/channel1')
+        assert.equal(node.sent(0).topic, 'wz_aq_rgbw.cmnd/channel1')
         assert.equal(node.sent(0).payload, 52)
         assert.equal(node.sent(1).topic, 'wz_aq_rgbw/cmnd/channel3')
         assert.equal(node.sent(1).payload, 50)
@@ -410,7 +410,7 @@ describe('time-controller', () => {
         const node = createNodeAndEmit('21:00')
 
         assert.equal(node.status().text, 'running [100, 0, 0, 0]')
-        assert.equal(node.sent(0).topic, 'wz_aq_rgbw/cmnd/channel1')
+        assert.equal(node.sent(0).topic, 'wz_aq_rgbw.cmnd/channel1')
         assert.equal(node.sent(0).payload, 100)
         assert.equal(node.sent(1).topic, 'wz_aq_rgbw/cmnd/channel3')
         assert.equal(node.sent(1).payload, 0)
@@ -420,7 +420,7 @@ describe('time-controller', () => {
         const node = createNodeAndEmit('21:30')
 
         assert.equal(node.status().text, 'running [0, 100, 0, 0]')
-        assert.equal(node.sent(0).topic, 'wz_aq_rgbw/cmnd/channel1')
+        assert.equal(node.sent(0).topic, 'wz_aq_rgbw.cmnd/channel1')
         assert.equal(node.sent(0).payload, 0)
         assert.equal(node.sent(1).topic, 'wz_aq_rgbw/cmnd/channel3')
         assert.equal(node.sent(1).payload, 100)
@@ -443,7 +443,7 @@ describe('time-controller', () => {
         })
 
         assert.equal(activeNode.status().text, 'running [0, 0, 0, 0]')
-        assert.equal(activeNode.sent(0).topic, 'wz_aq_rgbw/cmnd/channel1')
+        assert.equal(activeNode.sent(0).topic, 'wz_aq_rgbw.cmnd/channel1')
         assert.equal(activeNode.sent(0).payload, 0)
         assert.equal(activeNode.sent(1).topic, 'wz_aq_rgbw/cmnd/channel3')
         assert.equal(activeNode.sent(1).payload, 0)
@@ -460,7 +460,7 @@ describe('time-controller', () => {
         })
 
         assert.equal(activeNode.status().text, 'running [0, 3, 0, 0]')
-        assert.equal(activeNode.sent(0).topic, 'wz_aq_rgbw/cmnd/channel1')
+        assert.equal(activeNode.sent(0).topic, 'wz_aq_rgbw.cmnd/channel1')
         assert.equal(activeNode.sent(0).payload, 0)
         assert.equal(activeNode.sent(1).topic, 'wz_aq_rgbw/cmnd/channel3')
         assert.equal(activeNode.sent(1).payload, 3)
@@ -537,7 +537,7 @@ describe('time-controller', () => {
                     millisecond(0),
                 value : 100,
             },
-            topic: 'test-topic-nauticalDawn-offset-30',
+            topic: 'test-topic.nauticalDawn-offset-30',
         }
 
         const time = moment(_.get(sunCalcTimes, 'nauticalDawn')).
@@ -552,7 +552,7 @@ describe('time-controller', () => {
         })
 
         assert.equal(node.status().text, 'running [' + expectedValue + ']')
-        assert.equal(node.sent(0).topic, 'test-topic-nauticalDawn-offset-30')
+        assert.equal(node.sent(0).topic, 'test-topic.nauticalDawn-offset-30')
         assert.equal(node.sent(0).payload, expectedValue)
     })
 

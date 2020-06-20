@@ -151,7 +151,7 @@ class TimeController {
         this.node.data.forEach(event => {
             event.end.moment = this.createMoment(event.end.time)
             if (event.end.moment && event.end.moment.isSameOrBefore(now)) {
-                _.set(previousEvent, event.topic, event)
+                previousEvent[event.topic] = event
             }
         })
 
