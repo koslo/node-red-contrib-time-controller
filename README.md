@@ -1,6 +1,6 @@
 # Time Controller
 
-Time Controller is a node-red plugin for RGBW Controller (or other devices) where all channels are managed separatly. It is designed to fade in or fade out each channel in a specified time range. It calculates the percentage of each channel depending on the start and end value and time.
+Time Controller is a node-red plugin for RGBW Controller (or other devices) where all channels are managed separately. It is designed to fade in or fade out each channel in a specified time range. It calculates the percentage of each channel depending on the start and end value and time.
 
 ## Configuration
 
