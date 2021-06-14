@@ -23,15 +23,32 @@ Each object has the following format:
         "topic": "rgbw/cmnd/channel1"
     }
 
-| data object    | description                                                 |
-| -------------- | ----------------------------------------------------------- |
-| `start.time`   | start time, begin fading, `"hh:mm" or "suncalc event"`      |
-| `start.offset` | start offset in minutes, `integer`                          |
-| `start.value`  | start value, `integer`                                      |
-| `end.time`     | end time, stop fading, `"hh:mm" or "suncalc event"`         |
-| `end.offset`   | end offset in minutes, `integer`                            |
-| `end.value`    | end value, `integer`                                        |
-| `topic`        | topic, e.q. a MQTT topic/ command like a channel            |
+If the rgb mode is enabled the format will be:
+
+     {
+        "start": {
+            "time": "06:00",
+            "value": [80, 50, 10, 100]
+        },
+        "end": {
+            "time": "solarNoon",
+            "offset": 10,
+            "value": [100, 50, 10, 10]
+        },
+        "topic": "light-entity"
+    }
+
+
+
+| data object    | description                                                                      |
+| -------------- | ---------------------------------------------------------------------------------|
+| `start.time`   | start time, begin fading, `"hh:mm" or "suncalc event"`                           |
+| `start.offset` | start offset in minutes, `integer`                                               |
+| `start.value`  | start value in percent, `integer` or `array [red, green, blue, brigthness]`      |
+| `end.time`     | end time, stop fading, `"hh:mm" or "suncalc event"`                              |
+| `end.offset`   | end offset in minutes, `integer`                                                 |
+| `end.value`    | end value in percent, `integer` or `array [red, green, blue, brigthness]`        |
+| `topic`        | topic, e.q. a MQTT topic/ command like a channel or the light entity             |
 
 ### Interval
 
@@ -44,6 +61,10 @@ The coordinates of the location to calculate the correct sun events.
 ### Use previous state of event on reload
 
 If this is checked, the Time Controller will emit the last state of events on reload. Default: `false`    
+
+### Use rgb mode
+
+Use [red, green, blue, brightness] instead of a single value for one channel.
 
 ### possible suncalc events
 
