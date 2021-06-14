@@ -25,12 +25,12 @@
     "exclude": "tests/**"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
-    "moment": "^2.24.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
     "suncalc": "^1.8.0"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
+    "chai": "^4.3.4",
     "mocha": "^6.0.2",
     "node-red-contrib-mock-node": "^0.4.0",
     "nyc": "^13.3.0"
