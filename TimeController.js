@@ -78,6 +78,7 @@ class TimeController {
 
         this.config.interval = this.config.interval || 1
         this.config.usePreviousEventOnReload = (this.config.usePreviousEventOnReload + '').toLowerCase() === 'true'
+        this.config.useRGB = (this.config.useRGB + '').toLowerCase() === 'true'
 
         // for testing
         if (this.config.overrideNow) {
@@ -131,8 +132,11 @@ class TimeController {
 
     hasEventValueError(event, key) {
         if (_.has(event[key], 'value')) {
-            if (!_.isNumber(event[key].value)) {
+            if (!this.config.useRGB && !_.isNumber(event[key].value)) {
                 this.node.error(key + ' value is not a number; given: ' + event[key].value)
+                return true
+            } else if (this.config.useRGB && !_.isArray(event[key].value)){
+                this.node.error(key + ' value is not a array; given: ' + event[key].value)
                 return true
             }
         } else {
@@ -221,7 +225,7 @@ class TimeController {
             event.end.moment = this.createMoment(event.end.time, _.get(event.end, 'offset', 0))
             if (event.start.moment && event.end.moment && now.isBetween(event.start.moment, event.end.moment, null, '[]')) {
                 msg = {
-                    payload: (new Calculation(now, event)).getValue(),
+                    payload: (new Calculation(this.config, now, event)).getValue(),
                     topic  : event.topic,
                 }
 

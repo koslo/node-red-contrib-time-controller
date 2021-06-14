@@ -21,6 +21,9 @@
             lng                     : {
                 value: '',
             },
+            useRGB: {
+                value: false,
+            },
             usePreviousEventOnReload: {
                 value: true,
             },
@@ -74,6 +77,12 @@
     </div>
     <div class="form-row">
         <label style="margin-left: 100px; width: 70%">
+            <input type="checkbox" id="node-input-useRGB" placeholder="" style="width: 20px; margin: 0">
+            Use [red, green, blue, brightness] instead of a single value for one channel
+        </label>
+    </div>
+    <div class="form-row">
+        <label style="margin-left: 100px; width: 70%">
             <input type="checkbox" id="node-input-usePreviousEventOnReload" placeholder="" style="width: 20px; margin: 0">
             Use previous state of event on reload
         </label>
@@ -88,7 +97,7 @@
 <h2 id="configuration">Configuration</h2>
 <h3 id="data">Data</h3>
 <p>At the moment Data is defined as an array of objects including the start time and value, the end time and value and the topic. See <code>example.json</code> for a full set of a RGBWW controller.</p>
-<p>Each object has the following format:   </p>
+<p>Each object has the following format:</p>
 <pre><code> {
     <span class="hljs-attr">"start"</span>: {
         <span class="hljs-attr">"time"</span>: <span class="hljs-string">"06:00"</span>,
@@ -101,7 +110,22 @@
     },
     <span class="hljs-attr">"topic"</span>: <span class="hljs-string">"rgbw/cmnd/channel1"</span>
 }
-</code></pre><table>
+</code></pre>
+<p>If the rgb mode is enabled the format will be:</p>
+<pre><code> {
+    <span class="hljs-attr">"start"</span>: {
+        <span class="hljs-attr">"time"</span>: <span class="hljs-string">"06:00"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">[80, 50, 10, 100]</span>
+    },
+    <span class="hljs-attr">"end"</span>: {
+        <span class="hljs-attr">"time"</span>: <span class="hljs-string">"solarNoon"</span>,
+        <span class="hljs-attr">"offset"</span>: <span class="hljs-number">10</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">[100, 50, 10, 10]</span>
+    },
+    <span class="hljs-attr">"topic"</span>: <span class="hljs-string">"rgbw-entity"</span>
+}
+</code></pre>
+<table>
 <thead>
 <tr>
 <th>data object</th>
@@ -119,7 +143,7 @@
 </tr>
 <tr>
 <td><code>start.value</code></td>
-<td>start value, <code>integer</code></td>
+<td>start value in percent, <code>integer</code> or <code>array [red, green, blue, brightness]</code></td>
 </tr>
 <tr>
 <td><code>end.time</code></td>
@@ -131,11 +155,11 @@
 </tr>
 <tr>
 <td><code>end.value</code></td>
-<td>end value, <code>integer</code></td>
+<td>end value in percent, <code>integer</code> or <code>array [red, green, blue, brightness]</code></td>
 </tr>
 <tr>
 <td><code>topic</code></td>
-<td>topic, e.q. a MQTT topic/ command like a channel</td>
+<td>topic, e.q. a MQTT topic/ command like a channel or the light entity</td>
 </tr>
 </tbody>
 </table>
