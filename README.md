@@ -23,7 +23,7 @@ Each object has the following format:
         "topic": "rgbw/cmnd/channel1"
     }
 
-If the rgb mode is enabled the format will be:
+If the rgb mode is enabled the format will be (experimental):
 
      {
         "start": {
