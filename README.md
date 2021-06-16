@@ -28,26 +28,46 @@ If the rgb mode is enabled the format will be (experimental):
      {
         "start": {
             "time": "06:00",
-            "value": [80, 50, 10, 100]
+            "value": [80, 50, 10, 100, 100]
         },
         "end": {
             "time": "solarNoon",
             "offset": 10,
-            "value": [100, 50, 10, 10]
+            "value": [100, 50, 10, 1, 10]
         },
         "topic": "light-entity"
     }
 
+Example for the home-assistant call service node   
+   
+Data:
+
+    {
+        "rgbw_color": [
+            "{{payload.0}}",
+            "{{payload.1}}",
+            "{{payload.2}}",
+            "{{payload.3}}"
+        ],
+        "brightness": "{{payload.4}}"
+    }
+
+Entity id:
+
+    {{topic}}
+
+
+---
 
 
 | data object    | description                                                                      |
 | -------------- | ---------------------------------------------------------------------------------|
 | `start.time`   | start time, begin fading, `"hh:mm" or "suncalc event"`                           |
 | `start.offset` | start offset in minutes, `integer`                                               |
-| `start.value`  | start value in percent, `integer` or `array [red, green, blue, brigthness]`      |
+| `start.value`  | start value in percent, `integer` or `array [red, green, blue, brigthness, ...]`      |
 | `end.time`     | end time, stop fading, `"hh:mm" or "suncalc event"`                              |
 | `end.offset`   | end offset in minutes, `integer`                                                 |
-| `end.value`    | end value in percent, `integer` or `array [red, green, blue, brigthness]`        |
+| `end.value`    | end value in percent, `integer` or `array [red, green, blue, brigthness, ...]`        |
 | `topic`        | topic, e.q. a MQTT topic/ command like a channel or the light entity             |
 
 ### Interval
@@ -64,7 +84,11 @@ If this is checked, the Time Controller will emit the last state of events on re
 
 ### Use rgb mode
 
-Use [red, green, blue, brightness] instead of a single value for one channel.
+Use [red, green, blue, brightness, ...] instead of a single value for one channel.
+
+### output type
+
+If true the output is returned in Percent else as integer (0-255).
 
 ### possible suncalc events
 
@@ -101,8 +125,9 @@ https://github.com/mourner/suncalc
 todo
 
 
-# Coming soon
+# Coming soon/ Todo
 
+- tests for multi value mode
 - ~~implement suncalc events with offset~~
 - fullcalendar to define the time events in the frontend
 - programmatic control

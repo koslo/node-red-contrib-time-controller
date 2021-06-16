@@ -79,6 +79,7 @@ class TimeController {
         this.config.interval = this.config.interval || 1
         this.config.usePreviousEventOnReload = (this.config.usePreviousEventOnReload + '').toLowerCase() === 'true'
         this.config.useRGB = (this.config.useRGB + '').toLowerCase() === 'true'
+        this.config.outputAsRgbValue = (this.config.outputAsRgbValue + '').toLowerCase() === 'true'
 
         // for testing
         if (this.config.overrideNow) {

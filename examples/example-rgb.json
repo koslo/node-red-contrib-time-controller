@@ -1,13 +1,65 @@
 [
   {
     "start": {
-      "time": "06:00",
-      "value": [0, 0, 0, 0]
+      "time": "21:00",
+      "value": [
+        100,
+        100,
+        100,
+        100
+      ]
     },
     "end": {
-      "time": "06:30",
-      "value": [100, 0, 0, 50]
+      "time": "21:30",
+      "value": [
+        100,
+        0,
+        0,
+        50
+      ]
     },
-    "topic": "light-entity"
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "21:30",
+      "value": [
+        100,
+        0,
+        0,
+        50
+      ]
+    },
+    "end": {
+      "time": "22:00",
+      "value": [
+        0,
+        0,
+        100,
+        50
+      ]
+    },
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "22:00",
+      "value": [
+        0,
+        0,
+        100,
+        50
+      ]
+    },
+    "end": {
+      "time": "22:30",
+      "value": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "topic": "light.office_aq_rgbw"
   }
 ]

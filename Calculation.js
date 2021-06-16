@@ -40,8 +40,18 @@ class Calculation {
      * @returns {number}
      */
     _getValue(startTime, endTime, startValue, endValue) {
-        // return Math.round((((this.now.valueOf() - startTime) / (endTime - startTime)) * (endValue - startValue) + startValue) * 100) / 100;
-        return Math.round(((this.now.valueOf() - startTime) / (endTime - startTime)) * (endValue - startValue) + startValue)
+        let value = Math.round(((this.now.valueOf() - startTime) / (endTime - startTime)) * (endValue - startValue) + startValue)
+
+        //TODO throw exception
+        if(isNaN(value)){
+            value = 0;
+        }
+
+        if(this.config.outputAsRgbValue){
+            value = parseInt(value * 2.55);
+        }
+
+        return value;
     }
 }
 
