@@ -1,64 +1,85 @@
 [
   {
     "start": {
-      "time": "21:00",
-      "value": [
-        100,
-        100,
-        100,
-        100
-      ]
+      "time": "dawn",
+      "value": [0, 0, 0, 0, 100]
     },
     "end": {
-      "time": "21:30",
-      "value": [
-        100,
-        0,
-        0,
-        50
-      ]
+      "time": "sunrise",
+      "value": [0, 0, 100, 0, 100]
     },
     "topic": "light.office_aq_rgbw"
   },
   {
     "start": {
-      "time": "21:30",
-      "value": [
-        100,
-        0,
-        0,
-        50
-      ]
+      "time": "sunrise",
+      "value": [0, 0, 100, 0, 100]
     },
     "end": {
-      "time": "22:00",
-      "value": [
-        0,
-        0,
-        100,
-        50
-      ]
+      "time": "goldenHourEnd",
+      "offset": -15,
+      "value": [100, 10, 0, 0, 100]
     },
     "topic": "light.office_aq_rgbw"
   },
   {
     "start": {
-      "time": "22:00",
-      "value": [
-        0,
-        0,
-        100,
-        50
-      ]
+      "time": "goldenHourEnd",
+      "offset": -15,
+      "value": [100, 10, 0, 0, 100]
     },
     "end": {
-      "time": "22:30",
-      "value": [
-        0,
-        0,
-        0,
-        0
-      ]
+      "time": "goldenHourEnd",
+      "offset": 15,
+      "value": [100, 100, 100, 100, 100]
+    },
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "goldenHour",
+      "offset": -60,
+      "value": [100, 100, 100, 100, 100]
+    },
+    "end": {
+      "time": "dusk",
+      "value": [100, 100, 100, 50, 100]
+    },
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "dusk",
+      "value": [100, 100, 100, 50, 100]
+    },
+    "end": {
+      "time": "nauticalDusk",
+      "value": [100, 10, 0, 0, 100]
+    },
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "nauticalDusk",
+      "value": [100, 10, 0, 0, 100]
+    },
+    "end": {
+      "time": "nauticalDusk",
+      "offset": 30,
+      "value": [0, 0, 100, 0, 100]
+    },
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "nauticalDusk",
+      "offset": 30,
+      "value": [0, 0, 100, 0, 100]
+    },
+    "end": {
+      "time": "nauticalDusk",
+      "offset": 60,
+      "value": [0, 0, 0, 0, 0]
     },
     "topic": "light.office_aq_rgbw"
   }

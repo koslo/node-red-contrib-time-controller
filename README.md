@@ -86,9 +86,9 @@ If this is checked, the Time Controller will emit the last state of events on re
 
 Use [red, green, blue, brightness, ...] instead of a single value for one channel.
 
-### output type
+### Output type
 
-If true the output is returned in Percent else as integer (0-255).
+Returns the output as color value (0 - 255) otherwise in percent.
 
 ### possible suncalc events
 
