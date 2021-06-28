@@ -1,0 +1,170 @@
+[
+  {
+    "start": {
+      "time": "dawn",
+      "value": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "end": {
+      "time": "sunrise",
+      "value": [
+        0,
+        0,
+        100,
+        0,
+        100
+      ]
+    },
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "sunrise",
+      "value": [
+        0,
+        0,
+        100,
+        0,
+        100
+      ]
+    },
+    "end": {
+      "time": "sunrise",
+      "offset": 30,
+      "value": [
+        100,
+        10,
+        0,
+        0,
+        100
+      ]
+    },
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "sunrise",
+      "offset": 60,
+      "value": [
+        100,
+        10,
+        0,
+        0,
+        100
+      ]
+    },
+    "end": {
+      "time": "sunrise",
+      "offset": 120,
+      "value": [
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    },
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "sunset",
+      "offset": -60,
+      "value": [
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    },
+    "end": {
+      "time": "sunset",
+      "value": [
+        0,
+        0,
+        0,
+        40,
+        40
+      ]
+    },
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "sunset",
+      "value": [
+        0,
+        0,
+        0,
+        40,
+        40
+      ]
+    },
+    "end": {
+      "time": "sunset",
+      "offset": 30,
+      "value": [
+        100,
+        10,
+        0,
+        0,
+        80
+      ]
+    },
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "sunset",
+      "offset": 30,
+      "value": [
+        100,
+        10,
+        0,
+        0,
+        80
+      ]
+    },
+    "end": {
+      "time": "nauticalDusk",
+      "value": [
+        0,
+        0,
+        100,
+        0,
+        80
+      ]
+    },
+    "topic": "light.office_aq_rgbw"
+  },
+  {
+    "start": {
+      "time": "nauticalDusk",
+      "value": [
+        0,
+        0,
+        100,
+        0,
+        80
+      ]
+    },
+    "end": {
+      "time": "nauticalDusk",
+      "offset": 60,
+      "value": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "topic": "light.office_aq_rgbw"
+  }
+]

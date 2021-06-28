@@ -180,7 +180,7 @@ class TimeController {
     if (matches && matches.length) {
       return {
         h: +matches[1],
-        m: +matches[2],
+        m: +matches[2]
       }
     }
     return false
@@ -219,7 +219,9 @@ class TimeController {
       event.end.moment = this.createMoment(event.end.time, _.get(event.end, 'offset', 0))
       if (event.start.moment && event.end.moment && now.isBetween(event.start.moment, event.end.moment, null, '[]')) {
         msg = {
-          payload: (new Calculation(this.config, now, event)).getValue(),
+          payload: this.config.useRGB
+            ? (new Calculation(now, event)).getValues(this.config.outputAsRgbValue)
+            : (new Calculation(now, event)).getValue(this.config.outputAsRgbValue),
           topic: event.topic
         }
 

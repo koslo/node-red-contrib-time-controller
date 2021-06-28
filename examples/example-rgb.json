@@ -1,85 +1,48 @@
 [
   {
     "start": {
-      "time": "dawn",
-      "value": [0, 0, 0, 0, 100]
+      "time": "05:00",
+      "value": [
+        0,
+        0,
+        0,
+        0,
+        100
+      ]
     },
     "end": {
-      "time": "sunrise",
-      "value": [0, 0, 100, 0, 100]
+      "time": "06:30",
+      "value": [
+        100,
+        55,
+        50,
+        50,
+        100
+      ]
     },
     "topic": "light.office_aq_rgbw"
   },
   {
     "start": {
-      "time": "sunrise",
-      "value": [0, 0, 100, 0, 100]
+      "time": "19:00",
+      "value": [
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
     },
     "end": {
-      "time": "goldenHourEnd",
+      "time": "22:00",
       "offset": -15,
-      "value": [100, 10, 0, 0, 100]
-    },
-    "topic": "light.office_aq_rgbw"
-  },
-  {
-    "start": {
-      "time": "goldenHourEnd",
-      "offset": -15,
-      "value": [100, 10, 0, 0, 100]
-    },
-    "end": {
-      "time": "goldenHourEnd",
-      "offset": 15,
-      "value": [100, 100, 100, 100, 100]
-    },
-    "topic": "light.office_aq_rgbw"
-  },
-  {
-    "start": {
-      "time": "goldenHour",
-      "offset": -60,
-      "value": [100, 100, 100, 100, 100]
-    },
-    "end": {
-      "time": "dusk",
-      "value": [100, 100, 100, 50, 100]
-    },
-    "topic": "light.office_aq_rgbw"
-  },
-  {
-    "start": {
-      "time": "dusk",
-      "value": [100, 100, 100, 50, 100]
-    },
-    "end": {
-      "time": "nauticalDusk",
-      "value": [100, 10, 0, 0, 100]
-    },
-    "topic": "light.office_aq_rgbw"
-  },
-  {
-    "start": {
-      "time": "nauticalDusk",
-      "value": [100, 10, 0, 0, 100]
-    },
-    "end": {
-      "time": "nauticalDusk",
-      "offset": 30,
-      "value": [0, 0, 100, 0, 100]
-    },
-    "topic": "light.office_aq_rgbw"
-  },
-  {
-    "start": {
-      "time": "nauticalDusk",
-      "offset": 30,
-      "value": [0, 0, 100, 0, 100]
-    },
-    "end": {
-      "time": "nauticalDusk",
-      "offset": 60,
-      "value": [0, 0, 0, 0, 0]
+      "value": [
+        10,
+        20,
+        30,
+        40,
+        50
+      ]
     },
     "topic": "light.office_aq_rgbw"
   }

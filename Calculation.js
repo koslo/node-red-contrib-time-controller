@@ -1,33 +1,57 @@
 class Calculation {
   /**
    *
-   * @param {object} config
    * @param {moment} now
    * @param {object} event
    */
-  constructor (config, now, event) {
-    this.config = config
+  constructor (now, event) {
     this.now = now
     this.event = event
   }
 
   /**
    *
-   * @returns {number|array}
+   * @param {boolean} outputAsRgbValue
+   *
+   * @returns {number}
    */
-  getValue () {
+  getValue (outputAsRgbValue = false) {
     const startTime = this.event.start.moment.valueOf()
     const endTime = this.event.end.moment.valueOf()
 
-    if (this.config.useRGB) {
-      const values = []
-      for (let i = 0; i < this.event.start.value.length; i++) {
-        values.push(this._getValue(startTime, endTime, this.event.start.value[i], this.event.end.value[i]))
-      }
-      return values
-    } else {
-      return this._getValue(startTime, endTime, this.event.start.value, this.event.end.value)
+    return this._getValue(
+      startTime,
+      endTime,
+      this.event.start.value,
+      this.event.end.value,
+      outputAsRgbValue
+    )
+  }
+
+  /**
+   *
+   * @param {boolean} outputAsRgbValue
+   *
+   * @returns {array}
+   */
+  getValues (outputAsRgbValue = false) {
+    const startTime = this.event.start.moment.valueOf()
+    const endTime = this.event.end.moment.valueOf()
+
+    const values = []
+    for (let i = 0; i < this.event.start.value.length; i++) {
+      values.push(
+        this._getValue(
+          startTime,
+          endTime,
+          this.event.start.value[i],
+          this.event.end.value[i],
+          outputAsRgbValue
+        )
+      )
     }
+
+    return values
   }
 
   /**
@@ -36,10 +60,11 @@ class Calculation {
    * @param {int} endTime
    * @param {int} startValue
    * @param {int} endValue
+   * @param {boolean} outputAsRgbValue
    *
    * @returns {number}
    */
-  _getValue (startTime, endTime, startValue, endValue) {
+  _getValue (startTime, endTime, startValue, endValue, outputAsRgbValue = false) {
     let value = Math.round(((this.now.valueOf() - startTime) / (endTime - startTime)) * (endValue - startValue) + startValue)
 
     // TODO throw exception
@@ -47,7 +72,7 @@ class Calculation {
       value = 0
     }
 
-    if (this.config.outputAsRgbValue) {
+    if (outputAsRgbValue) {
       value = parseInt(value * 2.55)
     }
 

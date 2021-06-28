@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-  // todo suncalc events in example.json
+// todo suncalc events in example.json
 
 const { assert } = require('chai')
 const data = require('../examples/example.json')
@@ -507,7 +507,7 @@ describe('time-controller', () => {
       .seconds(0)
       .millisecond(0)
 
-    const expectedValue = (new Calculation({}, time, data)).getValue()
+    const expectedValue = (new Calculation(time, data)).getValue()
 
     const node = createNodeAndEmit(time.format('hh:mm'), {
       data: createData(data)
@@ -545,7 +545,7 @@ describe('time-controller', () => {
       .seconds(0)
       .millisecond(0)
 
-    const expectedValue = (new Calculation({}, time, data)).getValue()
+    const expectedValue = (new Calculation(time, data)).getValue()
 
     const node = createNodeAndEmit(time.format('hh:mm'), {
       data: createData(data)

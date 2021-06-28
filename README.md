@@ -127,7 +127,8 @@ todo
 
 # Coming soon/ Todo
 
-- tests for multi value mode
+- input as rgb value
+- ~~tests for multi value mode~~
 - ~~implement suncalc events with offset~~
 - fullcalendar to define the time events in the frontend
 - programmatic control

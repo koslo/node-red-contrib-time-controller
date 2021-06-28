@@ -29,10 +29,7 @@
 
 const { assert } = require('chai')
 const data = require('../examples/example-rgb.json')
-const Calculation = require('../Calculation')
 const _ = require('lodash')
-const moment = require('moment')
-const sunCalc = require('suncalc')
 const mock = require('node-red-contrib-mock-node')
 const nodeRedModule = require('../index.js')
 const LAT = 51.51
@@ -76,23 +73,6 @@ function createNodeAndEmit (payload, overrides = null) {
   activeNode = node
 
   return node
-}
-
-/**
- *
- * @param root
- * @param {string} payload
- * @param {function} cb
- */
-function hook (root, payload, cb) {
-  const timeout = 1
-  const node = createNodeAndEmit(payload)
-
-  root.timeout((timeout + 10) * 1000)
-
-  setTimeout(() => {
-    cb(node)
-  }, timeout * 1000)
 }
 
 /**
@@ -156,9 +136,9 @@ describe('time-controller', () => {
   it('should be on [62,6,38,0,100] at 06:00', () => {
     const node = createNodeAndEmit('06:00')
 
-    assert.equal(node.status().text, 'running [62,6,38,0,100]')
+    assert.equal(node.status().text, 'running [67,37,33,33,100]')
     assert.equal(node.sent(0).topic, 'light.office_aq_rgbw')
-    assert.deepEqual(node.sent(0).payload, [62, 6, 38, 0, 100])
+    assert.deepEqual(node.sent(0).payload, [67, 37, 33, 33, 100])
   })
 
   it('should be on [100,55,50,50,100] at 06:30', () => {
@@ -172,16 +152,16 @@ describe('time-controller', () => {
   it('should be on [100,100,100,97,100] at 20:30', () => {
     const node = createNodeAndEmit('20:30')
 
-    assert.equal(node.status().text, 'running [100,100,100,97,100]')
+    assert.equal(node.status().text, 'running [51,56,62,67,73]')
     assert.equal(node.sent(0).topic, 'light.office_aq_rgbw')
-    assert.deepEqual(node.sent(0).payload, [100, 100, 100, 97, 100])
+    assert.deepEqual(node.sent(0).payload, [51, 56, 62, 67, 73])
   })
 
   it('should be on [254,254,254,247,254] at 20:30', () => {
     const node = createNodeAndEmit('20:30', { outputAsRgbValue: 'true' })
 
-    assert.equal(node.status().text, 'running [254,254,254,247,254]')
+    assert.equal(node.status().text, 'running [130,142,158,170,186]')
     assert.equal(node.sent(0).topic, 'light.office_aq_rgbw')
-    assert.deepEqual(node.sent(0).payload, [254, 254, 254, 247, 254])
+    assert.deepEqual(node.sent(0).payload, [130, 142, 158, 170, 186])
   })
 })
