@@ -25,7 +25,7 @@
  * THE SOFTWARE.
  */
 
-  // todo suncalc events in example.json
+// todo suncalc events in example.json
 
 const { assert } = require('chai')
 const data = require('../examples/example-rgb.json')
@@ -49,7 +49,6 @@ function newNode (configOverrides) {
     data: JSON.stringify(data),
     lat: LAT,
     lng: LNG,
-    useRGB: 'true'
   }
   if (configOverrides) {
     _.assign(config, configOverrides)
@@ -75,62 +74,9 @@ function createNodeAndEmit (payload, overrides = null) {
   return node
 }
 
-/**
- *
- * @param {object} data
- * @returns {string}
- */
-function createData (data) {
-  return JSON.stringify([
-    _.merge({
-      start: {
-        time: '00:00',
-        value: [0]
-      },
-      end: {
-        time: '00:00',
-        value: [0]
-      },
-      topic: 'topic.topic'
-    }, data)
-  ])
-}
-
 describe('time-controller', () => {
   afterEach(() => {
     activeNode && activeNode.emit('close') && (activeNode = null)
-  });
-
-  ['start', 'end'].forEach((key) => {
-    [
-      {
-        v: null,
-        e: key + ' value is not a array; given: null'
-      },
-      {
-        v: '',
-        e: key + ' value is not a array; given: '
-      },
-      {
-        v: 'string',
-        e: key + ' value is not a array; given: string'
-      },
-      {
-        v: 0,
-        e: key + ' value is not a array; given: 0'
-      }
-    ].forEach((item) => {
-      it('should validate ' + key + ' value with: ' + item.v, () => {
-        const data = {}
-        data[key] = {
-          value: item.v
-        }
-        activeNode = newNode({
-          data: createData(data)
-        })
-        assert.equal(activeNode.error(), item.e)
-      })
-    })
   })
 
   it('should be on [62,6,38,0,100] at 06:00', () => {
@@ -163,5 +109,17 @@ describe('time-controller', () => {
     assert.equal(node.status().text, 'running [130,142,158,170,186]')
     assert.equal(node.sent(0).topic, 'light.office_aq_rgbw')
     assert.deepEqual(node.sent(0).payload, [130, 142, 158, 170, 186])
+  })
+
+  it('should be on [100, 55, 50, 50, 100] at 12:00', () => {
+    activeNode = newNode({
+      outputAsRgbValue: 'true',
+      usePreviousEventOnReload: 'true',
+      overrideNow: '12:00'
+    })
+
+    assert.equal(activeNode.status().text, 'running [100,55,50,50,100]')
+    assert.equal(activeNode.sent(0).topic, 'light.office_aq_rgbw')
+    assert.deepEqual(activeNode.sent(0).payload, [100, 55, 50, 50, 100])
   })
 })

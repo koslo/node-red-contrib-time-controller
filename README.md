@@ -1,14 +1,21 @@
 # Time Controller
 
-Time Controller is a node-red plugin for RGBW Controller (or other devices) where all channels are managed separately. It is designed to fade in or fade out each channel in a specified time range. It calculates the percentage of each channel depending on the start and end value and time.
+Time Controller is a node-red node for light controller (or other devices) that can fade the light or color channels in
+a specified time range. It is possible to control each channel separately or in rgb mode. It calculates the values
+depending on the start and end value and time.   
+The input values can be an integer or an array. The range doesn't matter, so it is possible to use percentages or rgb
+values or what ever you'd like.
 
 ## Configuration
 
 ### Data
 
-At the moment Data is defined as an array of objects including the start time and value, the end time and value and the topic. See `example.json` for a full set of a RGBWW controller.
+At the moment Data is defined as an array of objects including the start time and value, the end time and value and the
+topic. The values can be an integer or an array of integers. It doesn't matter whether they are percentages or color
+values.    
+See `example.json` for a full set of a RGBWW controller.
 
-Each object has the following format:   
+Each object has the following format:
 
      {
         "start": {
@@ -21,25 +28,22 @@ Each object has the following format:
             "value": 78
         },
         "topic": "rgbw/cmnd/channel1"
+    },
+    {
+       "start": {
+           "time": "06:00",
+           "value": [80, 50, 10, 100, 100]
+       },
+       "end": {
+           "time": "solarNoon",
+           "offset": 10,
+           "value": [500, 50, 10, 1, 255]
+       },
+       "topic": "light-entity"
     }
 
-If the rgb mode is enabled the format will be (experimental):
+Example for the home-assistant call service node if the input is defined as array
 
-     {
-        "start": {
-            "time": "06:00",
-            "value": [80, 50, 10, 100, 100]
-        },
-        "end": {
-            "time": "solarNoon",
-            "offset": 10,
-            "value": [100, 50, 10, 1, 10]
-        },
-        "topic": "light-entity"
-    }
-
-Example for the home-assistant call service node   
-   
 Data:
 
     {
@@ -56,23 +60,21 @@ Entity id:
 
     {{topic}}
 
-
 ---
-
 
 | data object    | description                                                                      |
 | -------------- | ---------------------------------------------------------------------------------|
 | `start.time`   | start time, begin fading, `"hh:mm" or "suncalc event"`                           |
 | `start.offset` | start offset in minutes, `integer`                                               |
-| `start.value`  | start value in percent, `integer` or `array [red, green, blue, brigthness, ...]`      |
+| `start.value`  | start value, `integer` or `array [red, green, blue, brigthness, ...]`      |
 | `end.time`     | end time, stop fading, `"hh:mm" or "suncalc event"`                              |
 | `end.offset`   | end offset in minutes, `integer`                                                 |
-| `end.value`    | end value in percent, `integer` or `array [red, green, blue, brigthness, ...]`        |
+| `end.value`    | end value, `integer` or `array [red, green, blue, brigthness, ...]`        |
 | `topic`        | topic, e.q. a MQTT topic/ command like a channel or the light entity             |
 
 ### Interval
 
-The interval in seconds to refresh the topics. Default: `1`   
+The interval in seconds to refresh the topics. Default: `1`
 
 ### Latitude and Longitude
 
@@ -80,15 +82,11 @@ The coordinates of the location to calculate the correct sun events.
 
 ### Use previous state of event on reload
 
-If this is checked, the Time Controller will emit the last state of events on reload. Default: `false`    
-
-### Use rgb mode
-
-Use [red, green, blue, brightness, ...] instead of a single value for one channel.
+If enabled then the Time Controller will emit the state of the previous event. Default: `false`
 
 ### Output type
 
-Returns the output as color value (0 - 255) otherwise in percent.
+If enabled then the input values must be in percentage and will be returned as color value (0 - 255).
 
 ### possible suncalc events
 
@@ -124,12 +122,8 @@ https://github.com/mourner/suncalc
 
 todo
 
-
 # Coming soon/ Todo
 
-- input as rgb value
-- ~~tests for multi value mode~~
-- ~~implement suncalc events with offset~~
 - fullcalendar to define the time events in the frontend
 - programmatic control
 - instant on/ off events

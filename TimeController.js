@@ -1,51 +1,25 @@
+const CalculationFactory = require('./Calculation/Factory')
+const Preparation = require('./Preparation')
 const moment = require('moment')
 const sunCalc = require('suncalc')
 const _ = require('lodash')
-const Calculation = require('./Calculation')
 
+/**
+ * TimeController
+ */
 class TimeController {
+  /**
+   * @param {object} node
+   * @param {object} config
+   *
+   */
   constructor (node, config) {
     /**
      * instance of node
      */
     this.node = node
 
-    /**
-     * @see https://github.com/mourner/suncalc
-     *
-     * possible sun events with datetime
-     *
-     * solarNoon: "2020-04-01T11:17:29.057Z"
-     * nadir: "2020-03-31T23:17:29.057Z"
-     * sunrise: "2020-04-01T04:48:24.935Z"
-     * sunset: "2020-04-01T17:46:33.179Z"
-     * sunriseEnd: "2020-04-01T04:51:52.625Z"
-     * sunsetStart: "2020-04-01T17:43:05.489Z"
-     * dawn: "2020-04-01T04:14:27.174Z"
-     * dusk: "2020-04-01T18:20:30.940Z"
-     * nauticalDawn: "2020-04-01T03:33:31.078Z"
-     * nauticalDusk: "2020-04-01T19:01:27.036Z"
-     * nightEnd: "2020-04-01T02:49:39.065Z"
-     * night: "2020-04-01T19:45:19.048Z"
-     * goldenHourEnd: "2020-04-01T05:32:29.758Z"
-     * goldenHour: "2020-04-01T17:02:28.356Z"
-     */
-    this.sunCalcTimes = {
-      solarNoon: null,
-      nadir: null,
-      sunrise: null,
-      sunset: null,
-      sunriseEnd: null,
-      sunsetStart: null,
-      dawn: null,
-      dusk: null,
-      nauticalDawn: null,
-      nauticalDusk: null,
-      nightEnd: null,
-      night: null,
-      goldenHourEnd: null,
-      goldenHour: null
-    }
+    this.sunCalcTimes = require('./SunCalcTimes')
 
     /**
      * time config
@@ -62,26 +36,28 @@ class TimeController {
      */
     this.status = {}
 
-    this.setEvents()
+    this.initEvents()
   }
 
+  /**
+   *
+   */
   init () {
-    let data = JSON.parse(this.config.data)
-    data = _.sortBy(data, ['topic', 'start'])
+    const preparation = new Preparation(JSON.parse(this.config.data))
 
-    this.node.data = _.filter(data, event => {
-      // for order
-      this.status[event.topic] = 0
+    this.status = preparation.getStatus()
+    const errors = preparation.getErrors()
+    if (!_.isEmpty(errors)) {
+      this.error(errors)
+    }
 
-      return !this.hasConfigError(event)
-    })
+    this.node.data = preparation.getData()
 
     this.config.interval = this.config.interval || 1
     this.config.usePreviousEventOnReload = (this.config.usePreviousEventOnReload + '').toLowerCase() === 'true'
-    this.config.useRGB = (this.config.useRGB + '').toLowerCase() === 'true'
     this.config.outputAsRgbValue = (this.config.outputAsRgbValue + '').toLowerCase() === 'true'
 
-    // for testing
+    // for testing, no offset
     if (this.config.overrideNow) {
       const now = this.createMoment(this.config.overrideNow)
       if (moment.isMoment(now)) {
@@ -90,78 +66,23 @@ class TimeController {
     }
   }
 
-  // todo better solution?
-  // todo check offset?
-  // todo lat, lng mandatory for suncalc?
-  // todo check if suncalc event is valid date (e.q. in summer there is no night in some areas. - "Invalid Date" )
-  hasConfigError (event) {
-    let error = false
-    if (_.has(event, 'start')) {
-      error |= this.hasEventTimeError(event, 'start')
-      error |= this.hasEventValueError(event, 'start')
-    } else {
-      this.node.error('start is undefined')
-      error = true
-    }
-    if (_.has(event, 'end')) {
-      error |= this.hasEventTimeError(event, 'end')
-      error |= this.hasEventValueError(event, 'end')
-    } else {
-      this.node.error('end is undefined')
-      error = true
-    }
-    if (!_.has(event, 'topic')) {
-      this.node.error('topic is undefined')
-      error = true
-    }
-
-    return error
-  }
-
-  hasEventTimeError (event, key) {
-    if (_.has(event[key], 'time')) {
-      if (!(/(\d+):(\d+)/u.exec(event[key].time)) && !_.has(this.sunCalcTimes, event[key].time)) {
-        this.node.error(key + ' time should be a string of format hh:mm or a sun event; given: ' + event[key].time)
-        return true
-      }
-    } else {
-      this.node.error(key + ' time is undefined')
-      return true
-    }
-    return false
-  }
-
-  hasEventValueError (event, key) {
-    if (_.has(event[key], 'value')) {
-      if (!this.config.useRGB && !_.isNumber(event[key].value)) {
-        this.node.error(key + ' value is not a number; given: ' + event[key].value)
-        return true
-      } else if (this.config.useRGB && !_.isArray(event[key].value)) {
-        this.node.error(key + ' value is not a array; given: ' + event[key].value)
-        return true
-      }
-    } else {
-      this.node.error(key + ' value is undefined')
-      return true
-    }
-
-    return false
-  }
-
+  /**
+   *
+   */
   sendPreviousEvents () {
     const now = this.node.now()
     const previousEvent = {}
 
     // todo find a solution if it is in the early morning and we have to find the last event
     this.node.data.forEach(event => {
-      event.end.moment = this.createMoment(event.end.time)
+      event.end.moment = this.createMoment(event.end.time, _.get(event.end, 'offset', 0))
       if (event.end.moment && event.end.moment.isSameOrBefore(now)) {
         previousEvent[event.topic] = event
       }
     })
 
     _.forEach(previousEvent, event => {
-      this.node.send({
+      this.send({
         payload: event.end.value,
         topic: event.topic
       })
@@ -190,6 +111,7 @@ class TimeController {
    *
    * @param {string} time format 'hh:mm' or sunlight times (@see sunCalcTimes)
    * @param {int} offset in minutes
+   *
    * @return {moment}
    */
   createMoment (time, offset = 0) {
@@ -205,6 +127,10 @@ class TimeController {
     return null
   }
 
+  /**
+   *
+   * @param {{payload}} msg
+   */
   schedule (msg) {
     let now = this.node.now()
     if (msg && moment.isMoment(msg.payload)) {
@@ -219,28 +145,51 @@ class TimeController {
       event.end.moment = this.createMoment(event.end.time, _.get(event.end, 'offset', 0))
       if (event.start.moment && event.end.moment && now.isBetween(event.start.moment, event.end.moment, null, '[]')) {
         msg = {
-          payload: this.config.useRGB
-            ? (new Calculation(now, event)).getValues(this.config.outputAsRgbValue)
-            : (new Calculation(now, event)).getValue(this.config.outputAsRgbValue),
+          payload: CalculationFactory(now, event, this.config.outputAsRgbValue).getData(),
           topic: event.topic
         }
 
-        this.node.send(msg)
-
+        this.send(msg)
         this.status[msg.topic] = msg.payload
       }
     })
     this.setStatus()
   }
 
-  setStatus () {
-    this.node.status({
-      fill: 'green',
-      shape: 'dot',
-      text: 'running [' + _.values(this.status).join(', ') + ']'
-    })
+  /**
+   *
+   * @param {{shape: string, text: string, fill: string}} payload
+   */
+  setStatus (payload = null) {
+    if (!payload) {
+      payload = {
+        fill: 'green',
+        shape: 'dot',
+        text: 'running [' + _.values(this.status).join(', ') + ']'
+      }
+    }
+    this.node.status(payload)
   }
 
+  /**
+   *
+   * @param {{payload: int|int[], topic: string}} msg
+   */
+  send (msg) {
+    this.node.send(msg)
+  }
+
+  /**
+   *
+   * @param {string|[]} error
+   */
+  error (error) {
+    this.node.error(error)
+  }
+
+  /**
+   *
+   */
   run () {
     this.interval = setInterval(
       () => this.schedule(),
@@ -248,6 +197,9 @@ class TimeController {
     )
   }
 
+  /**
+   *
+   */
   start () {
     this.stop()
     this.init()
@@ -255,8 +207,11 @@ class TimeController {
     this.run()
   }
 
+  /**
+   *
+   */
   stop () {
-    this.node.status({
+    this.setStatus({
       fill: 'red',
       shape: 'ring',
       text: 'stopped'
@@ -265,7 +220,10 @@ class TimeController {
     delete this.interval
   }
 
-  setEvents () {
+  /**
+   *
+   */
+  initEvents () {
     this.node.on('input', (msg) => {
       // todo config via payload?
       if (msg.payload === 'on') {
@@ -273,6 +231,7 @@ class TimeController {
       } else if (msg.payload === 'off') {
         this.stop()
       } else {
+        // todo offset?
         msg.payload = this.createMoment(msg.payload)
         if (moment.isMoment(msg.payload)) {
           this.init()

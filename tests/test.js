@@ -24,11 +24,11 @@
  * THE SOFTWARE.
  */
 
-// todo suncalc events in example.json
+  // todo suncalc events in example.json
 
 const { assert } = require('chai')
 const data = require('../examples/example.json')
-const Calculation = require('../Calculation')
+const CalculationFactory = require('../Calculation/Factory')
 const _ = require('lodash')
 const moment = require('moment')
 const sunCalc = require('suncalc')
@@ -225,16 +225,16 @@ describe('time-controller', () => {
     [
       {
         v: null,
-        e: key + ' value is not a number; given: null'
+        e: key + ' value is not a number or array; given: null'
       },
       {
         v: '',
-        e: key + ' value is not a number; given: '
+        e: key + ' value is not a number or array; given: '
       },
       {
         v: 'string',
-        e: key + ' value is not a number; given: string'
-      }
+        e: key + ' value is not a number or array; given: string'
+      },
     ].forEach((item) => {
       it('should validate ' + key + ' value with: ' + item.v, () => {
         const data = {}
@@ -282,6 +282,25 @@ describe('time-controller', () => {
         assert.equal(activeNode.error(), item.e)
       })
     })
+  })
+
+  it('should validate start end end value are from same type', () => {
+    activeNode = newNode({
+      data: JSON.stringify([
+        {
+          start: {
+            time: '00:00',
+            value: [0]
+          },
+          end: {
+            time: '00:00',
+            value: 0
+          },
+          topic: 'topic.topic'
+        }
+      ])
+    })
+    assert.equal(activeNode.error(), 'start and end value must be from same type; given: object - object')
   })
 
   it('should validate topic is undefined', () => {
@@ -507,7 +526,7 @@ describe('time-controller', () => {
       .seconds(0)
       .millisecond(0)
 
-    const expectedValue = (new Calculation(time, data)).getValue()
+    const expectedValue = CalculationFactory(time, data).getData()
 
     const node = createNodeAndEmit(time.format('hh:mm'), {
       data: createData(data)
@@ -545,7 +564,7 @@ describe('time-controller', () => {
       .seconds(0)
       .millisecond(0)
 
-    const expectedValue = (new Calculation(time, data)).getValue()
+    const expectedValue = CalculationFactory(time, data).getData()
 
     const node = createNodeAndEmit(time.format('hh:mm'), {
       data: createData(data)
