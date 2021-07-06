@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-time-controller",
-  "version": "0.1",
+  "version": "0.0.14",
   "description": "time controller node",
   "main": "index.js",
   "keywords": [
