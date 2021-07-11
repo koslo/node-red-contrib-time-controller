@@ -56,6 +56,13 @@ Data:
         "brightness": "{{payload.4}}"
     }
 
+Or:
+
+    {
+        "brightness_pct": "{{payload.0}}",
+        "color_temp": "{{payload.1}}"
+    }
+
 Entity id:
 
     {{topic}}
