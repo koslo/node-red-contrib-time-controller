@@ -71,10 +71,10 @@ Entity id:
 
 | data object    | description                                                                      |
 | -------------- | ---------------------------------------------------------------------------------|
-| `start.time`   | start time, begin fading, `"hh:mm" or "suncalc event"`                           |
+| `start.time`   | start time, begin fading, `"hh:mm:ss" or "suncalc event"`                           |
 | `start.offset` | start offset in minutes, `integer`                                               |
 | `start.value`  | start value, `integer` or `array [red, green, blue, brigthness, ...]`      |
-| `end.time`     | end time, stop fading, `"hh:mm" or "suncalc event"`                              |
+| `end.time`     | end time, stop fading, `"hh:mm:ss" or "suncalc event"`                              |
 | `end.offset`   | end offset in minutes, `integer`                                                 |
 | `end.value`    | end value, `integer` or `array [red, green, blue, brigthness, ...]`        |
 | `topic`        | topic, e.q. a MQTT topic/ command like a channel or the light entity             |
@@ -122,7 +122,7 @@ https://github.com/mourner/suncalc
 | ----------------- | ------------------------------------------------- |
 | `"on"`            | start the timecontroller interval                 |
 | `"off"`           | stop the timecontroller interval                  |
-| `"hh:mm"`         | emit events at given time once without interval   |
+| `"hh:mm:ss"`      | emit events at given time once without interval   |
 | `"suncalc event"` | emit events at given time once without interval   | 
 
 ## Programmatic Control
