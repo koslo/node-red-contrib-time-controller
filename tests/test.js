@@ -507,14 +507,12 @@ describe('time-controller', () => {
       start: {
         time: 'nauticalDawn',
         moment: moment(_.get(sunCalcTimes, 'nauticalDawn'))
-          .seconds(0)
           .millisecond(0),
         value: 0
       },
       end: {
         time: 'sunriseEnd',
         moment: moment(_.get(sunCalcTimes, 'sunriseEnd'))
-          .seconds(0)
           .millisecond(0),
         value: 90
       },
@@ -523,12 +521,11 @@ describe('time-controller', () => {
 
     const time = moment(_.get(sunCalcTimes, 'nauticalDawn'))
       .add(30, 'm')
-      .seconds(0)
       .millisecond(0)
 
     const expectedValue = CalculationFactory(time, data).getData()
 
-    const node = createNodeAndEmit(time.format('hh:mm'), {
+    const node = createNodeAndEmit(time.format('hh:mm:ss'), {
       data: createData(data)
     })
 
@@ -544,7 +541,6 @@ describe('time-controller', () => {
         time: 'nauticalDawn',
         moment: moment(_.get(sunCalcTimes, 'nauticalDawn'))
           .add(30, 'm') // offset
-          .seconds(0)
           .millisecond(0),
         offset: 30,
         value: 0
@@ -552,7 +548,6 @@ describe('time-controller', () => {
       end: {
         time: 'sunriseEnd',
         moment: moment(_.get(sunCalcTimes, 'sunriseEnd'))
-          .seconds(0)
           .millisecond(0),
         value: 100
       },
@@ -561,7 +556,6 @@ describe('time-controller', () => {
 
     const time = moment(_.get(sunCalcTimes, 'nauticalDawn'))
       .add(60, 'm')
-      .seconds(0)
       .millisecond(0)
 
     const expectedValue = CalculationFactory(time, data).getData()

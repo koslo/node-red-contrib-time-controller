@@ -79,12 +79,12 @@ describe('time-controller', () => {
     activeNode && activeNode.emit('close') && (activeNode = null)
   })
 
-  it('should be on [62,6,38,0,100] at 06:00', () => {
-    const node = createNodeAndEmit('06:00')
+  it('should be on [67,37,34,34,100] at 06:00:30', () => {
+    const node = createNodeAndEmit('06:00:30')
 
-    assert.equal(node.status().text, 'running [67,37,33,33,100]')
+    assert.equal(node.status().text, 'running [67,37,34,34,100]')
     assert.equal(node.sent(0).topic, 'light.office_aq_rgbw')
-    assert.deepEqual(node.sent(0).payload, [67, 37, 33, 33, 100])
+    assert.deepEqual(node.sent(0).payload, [67, 37, 34, 34, 100])
   })
 
   it('should be on [100,55,50,50,100] at 06:30', () => {
@@ -95,7 +95,7 @@ describe('time-controller', () => {
     assert.deepEqual(node.sent(0).payload, [100, 55, 50, 50, 100])
   })
 
-  it('should be on [100,100,100,97,100] at 20:30', () => {
+  it('should be on [51,56,62,67,73] at 20:30', () => {
     const node = createNodeAndEmit('20:30')
 
     assert.equal(node.status().text, 'running [51,56,62,67,73]')
@@ -103,7 +103,7 @@ describe('time-controller', () => {
     assert.deepEqual(node.sent(0).payload, [51, 56, 62, 67, 73])
   })
 
-  it('should be on [254,254,254,247,254] at 20:30', () => {
+  it('should be on [130,142,158,170,186] at 20:30', () => {
     const node = createNodeAndEmit('20:30', { outputAsRgbValue: 'true' })
 
     assert.equal(node.status().text, 'running [130,142,158,170,186]')

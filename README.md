@@ -19,7 +19,7 @@ Each object has the following format:
 
      {
         "start": {
-            "time": "06:00",
+            "time": "06:00:10",
             "value": 0
         },
         "end": {

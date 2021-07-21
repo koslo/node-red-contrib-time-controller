@@ -97,11 +97,12 @@ class TimeController {
    * @param {string} time format 'hh:mm'
    */
   parseTime (time) {
-    const matches = /(\d+):(\d+)/u.exec(time)
+    const matches = /(\d+):(\d+)(:(\d+))?/u.exec(time)
     if (matches && matches.length) {
       return {
         h: +matches[1],
-        m: +matches[2]
+        m: +matches[2],
+        s: +matches[4] || 0
       }
     }
     return false
@@ -116,11 +117,11 @@ class TimeController {
    */
   createMoment (time, offset = 0) {
     if (_.has(this.sunCalcTimes, time)) {
-      return moment(this.sunCalcTimes[time]).add(offset, 'm').seconds(0).millisecond(0)
+      return moment(this.sunCalcTimes[time]).add(offset, 'm').millisecond(0)
     } else {
       time = this.parseTime(time)
       if (time) {
-        return moment().hour(time.h).minute(time.m + offset).seconds(0).millisecond(0)
+        return moment().hour(time.h).minute(time.m + offset).second(time.s).millisecond(0)
       }
     }
 
@@ -136,7 +137,7 @@ class TimeController {
     if (msg && moment.isMoment(msg.payload)) {
       now = msg.payload
     }
-    now.seconds(0).millisecond(0)
+    now.millisecond(0)
 
     this.sunCalcTimes = sunCalc.getTimes(now, this.config.lat, this.config.lng)
 
@@ -246,7 +247,7 @@ class TimeController {
     })
 
     // to allow testing
-    this.node.now = () => moment().seconds(0).millisecond(0)
+    this.node.now = () => moment().millisecond(0)
   }
 }
 
