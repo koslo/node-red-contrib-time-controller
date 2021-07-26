@@ -551,7 +551,8 @@ describe('time-controller', () => {
           .millisecond(0),
         value: 100
       },
-      topic: 'test-topic.nauticalDawn-offset-30'
+      topic: 'test-topic.nauticalDawn-offset-30',
+      interval: 1
     }
 
     const time = moment(_.get(sunCalcTimes, 'nauticalDawn'))
@@ -560,7 +561,7 @@ describe('time-controller', () => {
 
     const expectedValue = CalculationFactory(time, data).getData()
 
-    const node = createNodeAndEmit(time.format('hh:mm'), {
+    const node = createNodeAndEmit(time.format('hh:mm:ss'), {
       data: createData(data)
     })
 

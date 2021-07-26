@@ -54,6 +54,7 @@ class TimeController {
     this.node.data = preparation.getData()
 
     this.config.interval = this.config.interval || 1
+    this.config.granularity = this.config.interval < 60 ? 'second' : this.config.interval < 60 * 60 ? 'minute' : 'hour'
     this.config.usePreviousEventOnReload = (this.config.usePreviousEventOnReload + '').toLowerCase() === 'true'
     this.config.outputAsRgbValue = (this.config.outputAsRgbValue + '').toLowerCase() === 'true'
 
@@ -76,7 +77,7 @@ class TimeController {
     // todo find a solution if it is in the early morning and we have to find the last event
     this.node.data.forEach(event => {
       event.end.moment = this.createMoment(event.end.time, _.get(event.end, 'offset', 0))
-      if (event.end.moment && event.end.moment.isSameOrBefore(now)) {
+      if (event.end.moment && event.end.moment.isSameOrBefore(now, this.config.granularity)) {
         previousEvent[event.topic] = event
       }
     })
@@ -116,16 +117,29 @@ class TimeController {
    * @return {moment}
    */
   createMoment (time, offset = 0) {
+    let newMoment = null
     if (_.has(this.sunCalcTimes, time)) {
-      return moment(this.sunCalcTimes[time]).add(offset, 'm').millisecond(0)
+      newMoment = moment(this.sunCalcTimes[time]).add(offset, 'm')
     } else {
       time = this.parseTime(time)
-      if (time) {
-        return moment().hour(time.h).minute(time.m + offset).second(time.s).millisecond(0)
+      if (!time) {
+        return null
       }
+      newMoment = moment().hour(time.h).minute(time.m + offset).second(time.s)
     }
 
-    return null
+    newMoment.millisecond(0)
+
+    switch (this.config.granularity) {
+      case 'minute':
+        newMoment.second(0)
+        break
+      case 'hour':
+        newMoment.minute(0)
+        break
+    }
+
+    return newMoment
   }
 
   /**
@@ -144,7 +158,7 @@ class TimeController {
     this.node.data.forEach(event => {
       event.start.moment = this.createMoment(event.start.time, _.get(event.start, 'offset', 0))
       event.end.moment = this.createMoment(event.end.time, _.get(event.end, 'offset', 0))
-      if (event.start.moment && event.end.moment && now.isBetween(event.start.moment, event.end.moment, null, '[]')) {
+      if (event.start.moment && event.end.moment && now.isBetween(event.start.moment, event.end.moment, this.config.granularity, '[]')) {
         msg = {
           payload: CalculationFactory(now, event, this.config.outputAsRgbValue).getData(),
           topic: event.topic
