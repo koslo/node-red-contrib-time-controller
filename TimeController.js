@@ -135,6 +135,7 @@ class TimeController {
         newMoment.second(0)
         break
       case 'hour':
+        newMoment.second(0)
         newMoment.minute(0)
         break
     }
