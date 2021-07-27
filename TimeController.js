@@ -114,7 +114,7 @@ class TimeController {
    * @param {string} time format 'hh:mm' or sunlight times (@see sunCalcTimes)
    * @param {int} offset in minutes
    *
-   * @return {moment}
+   * @return {moment|null}
    */
   createMoment (time, offset = 0) {
     let newMoment = null
@@ -128,19 +128,29 @@ class TimeController {
       newMoment = moment().hour(time.h).minute(time.m + offset).second(time.s)
     }
 
-    newMoment.millisecond(0)
+    return this.setMomentGranularity(newMoment)
+  }
+
+  /**
+   *
+   * @param {moment} moment
+   *
+   * @return {moment}
+   */
+  setMomentGranularity (moment) {
+    moment.millisecond(0)
 
     switch (this.config.granularity) {
       case 'minute':
-        newMoment.second(0)
+        moment.second(0)
         break
       case 'hour':
-        newMoment.second(0)
-        newMoment.minute(0)
+        moment.second(0)
+        moment.minute(0)
         break
     }
 
-    return newMoment
+    return moment
   }
 
   /**
@@ -150,16 +160,17 @@ class TimeController {
   schedule (msg) {
     let now = this.node.now()
     if (msg && moment.isMoment(msg.payload)) {
-      now = msg.payload
+      now = this.setMomentGranularity(msg.payload)
     }
-    now.millisecond(0)
 
     this.sunCalcTimes = sunCalc.getTimes(now, this.config.lat, this.config.lng)
 
     this.node.data.forEach(event => {
       event.start.moment = this.createMoment(event.start.time, _.get(event.start, 'offset', 0))
       event.end.moment = this.createMoment(event.end.time, _.get(event.end, 'offset', 0))
-      if (event.start.moment && event.end.moment && now.isBetween(event.start.moment, event.end.moment, this.config.granularity, '[]')) {
+      if (event.start.moment &&
+          event.end.moment &&
+          now.isBetween(event.start.moment, event.end.moment, this.config.granularity, '[]')) {
         msg = {
           payload: CalculationFactory(now, event, this.config.outputAsRgbValue).getData(),
           topic: event.topic
@@ -262,7 +273,7 @@ class TimeController {
     })
 
     // to allow testing
-    this.node.now = () => moment().millisecond(0)
+    this.node.now = () => this.setMomentGranularity(moment())
   }
 }
 

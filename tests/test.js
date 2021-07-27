@@ -570,5 +570,105 @@ describe('time-controller', () => {
     assert.equal(node.sent(0).payload, expectedValue)
   })
 
+  it('should be on 100 at sunrise with 1 minute offset and granularity of minute', () => {
+    const sunCalcTimes = sunCalc.getTimes(new Date(), LAT, LNG)
+    const data = {
+      start: {
+        time: 'sunrise',
+        moment: moment(_.get(sunCalcTimes, 'sunrise'))
+          .millisecond(0),
+        value: 0
+      },
+      end: {
+        time: 'sunrise',
+        moment: moment(_.get(sunCalcTimes, 'sunrise'))
+          .add(1, 'm') // offset
+          .millisecond(0),
+        offset: 1,
+        value: 100
+      },
+      topic: 'test-topic.sunrise-offset-1-granularity'
+    }
+
+    const time = moment(_.get(sunCalcTimes, 'sunrise'))
+      .add(1, 'm')
+
+    const expectedValue = CalculationFactory(time, data).getData()
+
+    const node = createNodeAndEmit(time.format('hh:mm'), {
+      data: createData(data),
+      interval: 60
+    })
+
+    assert.equal(node.status().text, 'running [' + expectedValue + ']')
+    assert.equal(node.sent(0).topic, 'test-topic.sunrise-offset-1-granularity')
+    assert.equal(node.sent(0).payload, expectedValue)
+  })
+
+  it('should be on 100 at sunrise with 1 minute and 1 second offset and granularity of minute', () => {
+    const expectedValue = 100
+    const sunCalcTimes = sunCalc.getTimes(new Date(), LAT, LNG)
+    const data = {
+      start: {
+        time: 'sunrise',
+        moment: moment(_.get(sunCalcTimes, 'sunrise')),
+        value: 0
+      },
+      end: {
+        time: 'sunrise',
+        moment: moment(_.get(sunCalcTimes, 'sunrise'))
+          .add(1, 'm'), // offset
+        offset: 1,
+        value: 100
+      },
+      topic: 'test-topic.sunrise-offset-1-granularity'
+    }
+
+    const time = moment(_.get(sunCalcTimes, 'sunrise'))
+      .add(1, 'm')
+      .add(1, 's')
+
+    const node = createNodeAndEmit(time.format('hh:mm'), {
+      data: createData(data),
+      interval: 60
+    })
+
+    assert.equal(node.status().text, 'running [' + expectedValue + ']')
+    assert.equal(node.sent(0).topic, 'test-topic.sunrise-offset-1-granularity')
+    assert.equal(node.sent(0).payload, expectedValue)
+  })
+
+  it('should be on 88 at sunrise with 1 minute offset and granularity of second', () => {
+    const expectedValue = 88
+    const sunCalcTimes = sunCalc.getTimes(new Date(), LAT, LNG)
+    const data = {
+      start: {
+        time: 'sunrise',
+        moment: moment(_.get(sunCalcTimes, 'sunrise')),
+        value: 0
+      },
+      end: {
+        time: 'sunrise',
+        moment: moment(_.get(sunCalcTimes, 'sunrise'))
+          .add(1, 'm'), // offset
+        offset: 1,
+        value: 100
+      },
+      topic: 'test-topic.sunrise-offset-1-granularity'
+    }
+
+    const time = moment(_.get(sunCalcTimes, 'sunrise'))
+      .add(1, 'm')
+
+    const node = createNodeAndEmit(time.format('hh:mm'), {
+      data: createData(data),
+      interval: 1
+    })
+
+    assert.equal(node.status().text, 'running [' + expectedValue + ']')
+    assert.equal(node.sent(0).topic, 'test-topic.sunrise-offset-1-granularity')
+    assert.equal(node.sent(0).payload, expectedValue)
+  })
+
   // todo check interval
 })

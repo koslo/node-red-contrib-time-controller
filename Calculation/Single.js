@@ -6,12 +6,9 @@ class CalculationSingle extends CalculationBase {
    * @returns {number}
    */
   getData () {
-    const startTime = this.event.start.moment.valueOf()
-    const endTime = this.event.end.moment.valueOf()
-
     return this._getValue(
-      startTime,
-      endTime,
+      this.event.start.moment.valueOf(),
+      this.event.end.moment.valueOf(),
       this.event.start.value,
       this.event.end.value
     )
